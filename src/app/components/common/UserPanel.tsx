@@ -15,7 +15,7 @@ function UserPanel() {
         <div>
           <h1 className="text-black">{session.user?.name}</h1>
           <h2 className="text-black">{session.user?.email}</h2>
-          <img src={session.user?.image ?? ""} alt="profile picture" />
+          <img src={session.user?.image || "./default.png"} alt="profile picture" />
           {/* <button onClick={() => router.push("/dashboard/profile")}>Profile</button> */}
         </div>
       ) : (
