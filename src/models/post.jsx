@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, models } from "mongoose";
 
 const comment = Schema(
     {
@@ -19,8 +19,15 @@ const file = Schema(
 
 const postSchema = Schema(
     {
-        creator: { type: Schema.Types.ObjectId, ref: 'User' },
-        content: String,
+        title: {
+            type: String,
+            required: true,
+        },
+        author: { type: Schema.Types.ObjectId, ref: 'User' },
+        content: {
+            type: String,
+            required: true,
+        },
         files: [file],
         comments: [comment],
         usersSaved: [{ type: Schema.Types.ObjectId, ref: 'User' }],
@@ -29,4 +36,6 @@ const postSchema = Schema(
     { timestamps: true }
 )
 
-module.exports = model('Post', postSchema)
+const Post = models.Post || model('Post', postSchema)
+
+export default Post;

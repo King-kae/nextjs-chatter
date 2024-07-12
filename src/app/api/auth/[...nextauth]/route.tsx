@@ -8,11 +8,11 @@ import Credentials from "next-auth/providers/credentials";
 
 export const authOptions: AuthOptions = {
   callbacks: {
-    jwt({ account, token, user, profile, session }) {
+    async jwt({ token, user}) {
       if (user) token.user = user;
       return token;
     },
-    session({ session, token }) {
+    async session({ session, token }) {
       session.user = token.user as any;
       return session;
     },
@@ -110,6 +110,7 @@ export const authOptions: AuthOptions = {
       },
     }),
   ],
+  secret: process.env.NEXTAUTH_SECRET
 };
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
