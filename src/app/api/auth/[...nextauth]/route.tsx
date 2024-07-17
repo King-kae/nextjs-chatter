@@ -27,16 +27,16 @@ export const authOptions: AuthOptions = {
         connectToMongoDB();
 
         const email = profile.email;
-        const name = profile.name;
+        const username = profile.name;
         const image = profile.avatar_url;
 
         const exist_user = await User.findOne({ email: email })
 
-        if (!exist_user) User.create({ email, name, image });
+        if (!exist_user) User.create({ email, username, image });
 
         return {
           id: profile.id,
-          name,
+          username,
           email,
           image,
         };
@@ -52,16 +52,16 @@ export const authOptions: AuthOptions = {
         await connectToMongoDB();
 
         const email = profile.email;
-        const name = profile.name;
+        const username = profile.name;
         const image = profile.picture;
 
         const exist_user = await User.findOne({ email });
 
-        if (!exist_user) User.create({ email, name, avatar:image });
+        if (!exist_user) User.create({ email, username, avatar:image });
 
         return {
           id: profile.sub,
-          name,
+          username,
           email,
           image,
         };

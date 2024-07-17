@@ -43,20 +43,49 @@
 
 
 
-import mongoose from 'mongoose';
-// import dotenv from 'dotenv';
-// dotenv.config({ path: "@/vars/.env"})
+// import mongoose from 'mongoose';
+// // import dotenv from 'dotenv';
+// // dotenv.config({ path: "@/vars/.env"})
 
-const connectToMongoDB = async () => {
-    await mongoose.connect(process.env.MONGODB_URL as string)
+// const connectToMongoDB = async () => {
+//     await mongoose.connect(process.env.MONGODB_URL as string)
 
-    mongoose.connection.on('connected', () => {
-        console.log('Connected to MongoDB successfully')
-    })
+//     mongoose.connection.on('connected', () => {
+//         console.log('Connected to MongoDB successfully')
+//     })
 
-    mongoose.connection.on('error', (error) => {
-        console.log(error)
-    })
+//     mongoose.connection.on('error', (error) => {
+//         console.log(error)
+//     })
+// }
+
+// export default connectToMongoDB
+
+// utils/connectToDb.js
+import mongoose from "mongoose";
+
+let client: mongoose.Connection ;
+let bucket: mongoose.mongo.GridFSBucket;
+
+// const MONGOB_URI = "mongodb://localhost:27017/myapp";
+
+async function connectToMongoDB() {
+    if (client) {
+        return { client, bucket };
+    }
+
+    await mongoose.connect(process.env.MONGODB_URL as string);
+
+    client = mongoose.connection;
+
+    // use mongoose connection
+    const db = mongoose.connection;
+    bucket = new mongoose.mongo.GridFSBucket(db.db, {
+        bucketName: "images",
+    });
+
+    console.log("Connected to the Database");
+    return { client, bucket };
 }
 
-export default connectToMongoDB
+export default connectToMongoDB;

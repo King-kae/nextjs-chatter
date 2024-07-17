@@ -1,125 +1,82 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import axios from "axios";
-import { useSession } from 'next-auth/react';
-
-
-const handleSubmit = async (e: { preventDefault: () => void; currentTarget: HTMLFormElement | undefined; }) => {
-  // handle form submission
-  e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const title = formData.get("title");
-    const content = formData.get("content");
-    
-    
-    try {
-      const createPostResponse = await axios
-      .post("/api/createpost", {
-        title,
-        content,
-      })
-      .then((res) => {
-        console.log(res);
-      });
-
-      console.log(createPostResponse);
-
-    } catch (err) {
-        console.log(err);
-    } 
-};
+import { useSession } from "next-auth/react";
+import router from "next/router";
 
 export default function CreatePost() {
+  const [file, setFile] = useState<File | null>(null);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [message, setMessage] = useState("");
 
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const { data: session, status } = useSession();
-
-    { loading && (<div> your loading spinner or anything...</div>) }
-    if (status === "unauthenticated") {
-        return <p>You must be logged in to create a post</p>;
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setFile(e.target.files[0]);
     }
-    return (
-    <main>
-      <h1>Create Post, {session?.user?.name}</h1>
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!file || !title || !content) {
+      setMessage("Please fill in all fields and select a file.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("title", title);
+    formData.append("content", content);
+
+    try {
+      const response = await axios.post("/api/createpost", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log("Upload successful:", response.data);
+      setMessage("Post uploaded successfully!");
+    } catch (error) {
+      console.error("Error uploading post:", error);
+      setMessage("Error uploading post. Please try again.");
+    }
+  };
+
+  return (
+    <div>
+      <h1>Upload Post</h1>
       <form onSubmit={handleSubmit}>
-        <div className="">
-          <label htmlFor="cover-photo">
-          <input type="file" id="cover-photo" name="cover-photo" />
-          <span>Add a 1000x250px</span>
-          </label>
+        <div>
+          <label htmlFor="image">Image:</label>
+          <input
+            type="file"
+            id="image"
+            accept="image/*"
+            onChange={handleFileChange}
+          />
         </div>
         <div>
-          <label htmlFor="title">Title</label>
-          <input type="text" id="title" name="title" />
+          <label htmlFor="title">Title:</label>
+          <input
+            type="text"
+            id="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
         </div>
         <div>
-          <label htmlFor="content">Content</label>
-          <textarea id="content" name="content" />
+          <label htmlFor="content">Content:</label>
+          <textarea
+            id="content"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+          />
         </div>
-        <button type="submit">Submit</button>
+        <button type="submit">Upload Post</button>
       </form>
-    </main>
+      {message && <p>{message}</p>}
+    </div>
   );
 }
-
-
-// pages/create-post.js
-// import { useState } from 'react';
-// import { useSession } from 'next-auth/react';
-// import { useRouter } from 'next/navigation';
-
-// export default function CreatePost() {
-//   const { data: session } = useSession();
-//   const router = useRouter();
-//   const [title, setTitle] = useState('');
-//   const [content, setContent] = useState('');
-
-//   const handleSubmit = async (e: any) => {
-//     e.preventDefault();
-
-//     const res = await fetch('/api/createpost', {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify({ title, content }),
-//     });
-//     console.log(res);
-
-//     if (res.ok) {
-//       router.push('/');
-//     } else {
-//       console.error('Failed to create post');
-//     }
-//   };
-
-//   if (!session) {
-//     return <p>You must be logged in to create a post</p>;
-//   }
-
-//   return (
-//     <form onSubmit={handleSubmit}>
-//       <div>
-//         <label>Title</label>
-//         <input
-//           type="text"
-//           name="title"
-//           value={title}
-//           onChange={(e) => setTitle(e.target.value)}
-//           required
-//         />
-//       </div>
-//       <div>
-//         <label>Content</label>
-//         <textarea
-//         name='content'
-//           value={content}
-//           onChange={(e) => setContent(e.target.value)}
-//           required
-//         />
-//       </div>
-//       <button type="submit">Create Post</button>
-//     </form>
-//   );
-// }

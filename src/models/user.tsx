@@ -19,13 +19,20 @@ const userSchema = new Schema({
     unique: true, 
     required: true 
   },
-  infos: {
-    posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
-    liked: [{ type: Schema.Types.ObjectId, ref: "Post" }],
-    saved: [{ type: Schema.Types.ObjectId, ref: "Post" }],
-    subs: [{ type: Schema.Types.ObjectId, ref: "User" }],
-    mySubs: [{ type: Schema.Types.ObjectId, ref: "User" }],
-  }
+  bio: { type: String },
+  links: { type: String },
+  joinDate: { type: Date, default: Date.now },
+  location: { type: String },
+  work: { type: String },
+  skills: { type: String },
+  posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
+  comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
+  liked: [{ type: Schema.Types.ObjectId, ref: "Post" }],
+  following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  followedTags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
+  bookmarks: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
+
 }, {timestamps: true});
 
 const User = models.User || model("User", userSchema);

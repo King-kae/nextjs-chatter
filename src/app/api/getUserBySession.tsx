@@ -1,17 +1,17 @@
-import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import User from '../../../models/user'; // Adjust the path to your User model
-import {authOptions} from '../auth/[...nextauth]/route'
+import { NextApiRequest, NextApiResponse } from 'next';
+import { getServerSession } from "next-auth/next"
+import User from '../../models/user'; // Adjust the path to your User model
+import {authOptions} from './auth/[...nextauth]/route'
 
 export async function GET(request: any) {
     const { req, res } = request;
-    
+
     try {
         // Get session
-        const session = await getServerSession({ req: request, res: NextResponse, ...authOptions });
-        
+        const session = await getServerSession(authOptions);
+
         if (!session?.user?.email) {
-            return NextResponse.json(
+            return Response.json(
                 {
                     status: "error",
                     message: "Session not found or expired"
@@ -22,11 +22,11 @@ export async function GET(request: any) {
             );
         }
 
-        // Fetch user data based on session email (assuming it's stored in your User model)
+        // Fetch user data based on session email
         const user = await User.findOne({ email: session.user.email });
 
         if (!user) {
-            return NextResponse.json(
+            return Response.json(
                 {
                     status: "error",
                     message: "User not found"
@@ -37,8 +37,8 @@ export async function GET(request: any) {
             );
         }
 
-        // Return success NextResponse with user data
-        return NextResponse.json(
+        // Return success response with user data
+        return Response.json(
             {
                 status: "success",
                 data: { user }
@@ -48,8 +48,8 @@ export async function GET(request: any) {
             }
         );
     } catch (error) {
-        console.error("Error fetching user data:", error);
-        return NextResponse.json(
+        console.error('Error fetching user data:', error);
+        return Response.json(
             {
                 status: "error",
                 message: "Internal server error"

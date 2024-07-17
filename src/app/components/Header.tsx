@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import logo from "../../../public/logo.jpg" // Replace this line with the correct path to the 'vercel.svg' file
+import logo from "@/../public/logo.jpg" // Replace this line with the correct path to the 'vercel.svg' file
+
 import {
   Dialog,
   DialogPanel,

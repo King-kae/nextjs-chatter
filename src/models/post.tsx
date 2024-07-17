@@ -1,23 +1,7 @@
 import { Schema, model, models } from "mongoose";
 
-const comment = Schema(
-    {
-        user: { type: Schema.Types.ObjectId, ref: 'User' },
-        text: String,
-        like: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-    },
-    { timestamps: true }
-)
 
-const file = Schema(
-    {
-        type: String,
-        path: String,
-    },
-    { _id: false }
-)
-
-const postSchema = Schema(
+const postSchema = new Schema(
     {
         title: {
             type: String,
@@ -28,8 +12,17 @@ const postSchema = Schema(
             type: String,
             required: true,
         },
-        files: [file],
-        comments: [comment],
+        imageURL: {
+            type: String,
+            required: true,
+        },
+        date: { type: Date, default: Date.now },
+        titleURL: {
+          type: String
+        },
+        likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+        bookmarks: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+        comments: [{ type: Schema.Types.ObjectId, required: true, ref: 'Comment' }],
         usersSaved: [{ type: Schema.Types.ObjectId, ref: 'User' }],
         usersLiked: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     },
