@@ -2,13 +2,16 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import router from "next/router";
+import { useRouter } from "next/navigation";
+
+
 
 export default function CreatePost() {
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [message, setMessage] = useState("");
+  const router = useRouter();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -37,6 +40,7 @@ export default function CreatePost() {
       });
 
       console.log("Upload successful:", response.data);
+      router.push("/posts");
       setMessage("Post uploaded successfully!");
     } catch (error) {
       console.error("Error uploading post:", error);

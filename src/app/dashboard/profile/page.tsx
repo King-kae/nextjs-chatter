@@ -13,15 +13,11 @@ function ProfilePage() {
 
   const router = useRouter();
   console.log(session, status);
-  const logout = async () => {
-    try {
-        await signOut();
-        router.push("/login");
-        console.log("Logged out!");
-    } catch (error) {
-        console.error("Could not logout!");
-    }
-};
+  const logout =  () => {
+    signOut();
+    router.push("/login");
+    
+  };
 
   return (
     <>

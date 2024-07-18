@@ -1,25 +1,3 @@
-// import User from '../../../models/user';
-// import bcrypt from 'bcrypt';
-// import mongoose from 'mongoose';
-// import dotenv from "dotenv";
-// dotenv.config();
-
-// export async function POST(req: any) {
-//     const body = await req.json();
-//     await mongoose.connect(process.env.MONGO_URL || '');
-//     const pass = body.password;
-//     if (!pass?.length || pass.length < 5) {
-//       new Error('password must be at least 5 characters');
-//     }
-  
-//     const notHashedPassword = pass;
-//     const salt = await bcrypt.genSaltSync(10);
-//     body.password = bcrypt.hashSync(notHashedPassword, salt);
-  
-//     const createdUser = await User.create(body);
-//     return Response.json(createdUser);
-// }
-
 
 import { NextResponse } from 'next/server';
 import User from "../../../../models/user"
@@ -50,7 +28,7 @@ export async function POST(request: Request) {
         console.log(savedUser);
 
         return NextResponse.json({
-            _id: savedUser._id,
+            id: savedUser._id,
             email: savedUser.email,
             username: savedUser.username,
         });

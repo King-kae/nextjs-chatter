@@ -20,7 +20,7 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
     const { client, bucket } = await connectToMongoDB();
 
     const session = await getServerSession({ req: Request, res: NextResponse, ...authOptions });
-    // console.log(session);
+    console.log(session);
     if (!session) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
@@ -73,6 +73,7 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
                 titleURL: `${process.env.NEXTAUTH_URL}/${session.user?.name}/${title}`
             });
             await newItem.save();
+            await User.findByIdAndUpdate(user._id, { $push: { posts: newItem._id } });
             console.log(newItem);
             return NextResponse.json({ message: 'ok' });
         });

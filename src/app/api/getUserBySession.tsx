@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from "next-auth/next"
 import User from '../../models/user'; // Adjust the path to your User model
-import {authOptions} from './auth/[...nextauth]/route'
+import { authOptions } from './auth/[...nextauth]/route'
 
 export async function GET(request: any) {
     const { req, res } = request;
@@ -58,5 +58,22 @@ export async function GET(request: any) {
                 status: 500
             }
         );
+    }
+}
+export const getUserDetails = async () => {
+
+    //@ts-ignore
+    const authSession = await getAuthSession();
+
+    if (authSession) {
+
+        if (authSession.id) {
+
+            //@ts-ignore
+            const user = await withRetry(getUserInfo, 5, [{ _id: new ObjectId(authSession.id) }])
+                .catch(err => null);
+
+            return user;
+        }
     }
 }
