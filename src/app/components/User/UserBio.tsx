@@ -5,13 +5,13 @@ import Button from "../Button";
 import { CalendarIcon } from "@heroicons/react/outline";
 // import { useEditModal } from '@/hooks/useEditModal';
 import { useRouter } from "next/router";
-import { useEditModal } from "@/hooks/useModal";
-import useFollow from "@/hooks/useFollow";
+import { useEditProfileModal } from "../../hook/useModal";
+import useFollow from "../../hook/useFollow";
 export default function UserBio() {
   const { data: currentUser } = useCurrentUser();
   const router = useRouter();
   const { data: user } = useUsers(router.query?.userId as string);
-  const editModal = useEditModal();
+  const editModal = useEditProfileModal();
   const { isFollowing, toggleFollow } = useFollow(user?.id as string);
   return (
     <div className="">

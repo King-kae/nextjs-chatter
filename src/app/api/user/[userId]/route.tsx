@@ -30,3 +30,36 @@ export async function GET(request: any, { params }: { params: { userId: string }
         return NextResponse.json({ status: "error", message: "Internal server error"},{ status: 500});
     }
 }
+
+
+export async function PATCH(request: any, { params }: { params: { userId: string } }) {
+    const { req, res } = request;
+    const { userId } = params;
+    
+    try {
+        // Connect to database
+        const { client } = await connectToDB();
+        // Get session
+        const user = await User.findById({ _id: userId });
+
+        if (!user) {
+            return NextResponse.json({ status: "error", message: "User not found"},{ status: 404});
+        }
+
+        // Update user data
+        const { username, bio, location, work, skills, links } = req.body;
+        user.username = name;
+        user.bio = bio;
+        user.location = location;
+        user.work = work;
+        user.skills = skills;
+        user.links = links;
+        await user.save();
+
+        // Return success NextResponse with updated user data
+        return NextResponse.json({ status: "success", data: { user }},{ status: 200});
+    } catch (error) {
+        console.error("Error updating user data:", error);
+        return NextResponse.json({ status: "error", message: "Internal server error"},{ status: 500});
+    }
+}

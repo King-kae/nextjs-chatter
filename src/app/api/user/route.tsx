@@ -63,3 +63,57 @@ export async function GET(request: any) {
         );
     }
 }
+
+export async function PUT(request: any) {
+    const { req, res } = request;
+    
+    try {
+        // Connect to database
+        const { client } = await connectToDB();
+        // Get session
+        const session = await getServerSession({ req: request, res: NextResponse, ...authOptions });
+        
+        if (!session?.user?.email) {
+            return NextResponse.json(
+                {
+                    status: "error",
+                    message: "Session not found or expired"
+                },
+                {
+                    status: 401
+                }
+            );
+        }
+
+        // Fetch user data based on session email (assuming it's stored in your User model)
+        const user = await User.findOne({ email: session.user.email });
+
+        if (!user) {
+            return NextResponse.json({ status: "error", message: "User not found"},{ status: 404 });
+        }
+
+        // Update user data
+        const { name, bio, location, work, skills, links } = req.body;
+        user.name = name;
+        user.bio = bio;
+        user.location = location;
+        user.work = work;
+        user.skills = skills;
+        user.links = links;
+        await user.save();
+
+        // Return success NextResponse with updated user data
+        return NextResponse.json({ status: "success", data: { user }},{ status: 200});
+    } catch (error) {
+        console.error("Error updating user data:", error);
+        return NextResponse.json(
+            {
+                status: "error",
+                message: "Internal server error"
+            },
+            {
+                status: 500
+            }
+        );
+    }
+}
