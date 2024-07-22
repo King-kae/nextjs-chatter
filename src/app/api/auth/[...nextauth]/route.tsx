@@ -28,17 +28,17 @@ export const authOptions: AuthOptions = {
 
         const email = profile.email;
         const username = profile.name;
-        const image = profile.avatar_url;
+        const avatar = profile.avatar_url;
 
         const exist_user = await User.findOne({ email: email })
 
-        if (!exist_user) User.create({ email, username, image });
+        if (!exist_user) User.create({ email, username, avatar });
 
         return {
           id: profile.id,
           username,
           email,
-          image,
+          avatar,
         };
       }
     }),
@@ -53,17 +53,17 @@ export const authOptions: AuthOptions = {
 
         const email = profile.email;
         const username = profile.name;
-        const image = profile.picture;
+        const avatar = profile.picture;
 
         const exist_user = await User.findOne({ email });
 
-        if (!exist_user) User.create({ email, username, avatar:image });
+        if (!exist_user) User.create({ email, username, avatar });
 
         return {
           id: profile.sub,
           username,
           email,
-          image,
+          avatar,
         };
       },
     }),

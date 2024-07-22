@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useCallback } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import useCurrentUser from './useCurrentUser';
 import useUsers from './useUsers';
 import { useToast } from './useToast';
@@ -12,7 +12,7 @@ const useFollow = (userId: string) => {
 
     const toast = useToast();
 
-    const isFollowing = currentUser?.following.includes(userId) ?? false;
+    const isFollowing = currentUser?.following?.includes(userId) ?? false;
 
     const toggleFollow = useCallback(async () => {
         if (!currentUser) {

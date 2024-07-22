@@ -69,20 +69,12 @@ const ImageUpload: React.FC<DropzoneProps> = ({
         className: `text-white text-center border-2 border-dotted border-neutral-700 ${variantClass}`,
       })}
     >
-      <input {...getInputProps()} />
-      {base64 ? (
-        <div className=" flex items-center justify-center h-inherit w-inherit ">
-          <Image
-            src={typeof base64 === "string" ? base64 : ""}
-            height="100"
-            width="100"
-            alt="Uploaded image"
-            className={` object-cover ${variantClass} `}
-          />
-        </div>
-      ) : (
-        <p className="text-white">{label}</p>
-      )}
+        <input {...getInputProps()} />
+        {base64 ? (
+            <Image src={base64 as string} alt={label} layout="fill" objectFit="cover" />
+        ) : (
+            <p>{label}</p>
+        )}
     </div>
   );
 };

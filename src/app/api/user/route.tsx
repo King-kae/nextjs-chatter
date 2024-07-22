@@ -41,15 +41,7 @@ export async function GET(request: any) {
         }
 
         // Return success NextResponse with user data
-        return NextResponse.json(
-            {
-                status: "success",
-                data: { user }
-            },
-            {
-                status: 200
-            }
-        );
+        return NextResponse.json(user);
     } catch (error) {
         console.error("Error fetching user data:", error);
         return NextResponse.json(
@@ -103,7 +95,7 @@ export async function PUT(request: any) {
         await user.save();
 
         // Return success NextResponse with updated user data
-        return NextResponse.json({ status: "success", data: { user }},{ status: 200});
+        return NextResponse.json(user);
     } catch (error) {
         console.error("Error updating user data:", error);
         return NextResponse.json(

@@ -14,6 +14,6 @@ const createModalHook = (): (() => ModalStore) => {
     }));
 };
 
-export const useEditProfileModal = createModalHook();
+export const useEditModal = createModalHook();
 export const useRegisterModal = createModalHook();
 export const useLoginModal = createModalHook();

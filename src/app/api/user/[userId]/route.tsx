@@ -48,7 +48,7 @@ export async function PATCH(request: any, { params }: { params: { userId: string
 
         // Update user data
         const { username, bio, location, work, skills, links } = req.body;
-        user.username = name;
+        user.username = username;
         user.bio = bio;
         user.location = location;
         user.work = work;

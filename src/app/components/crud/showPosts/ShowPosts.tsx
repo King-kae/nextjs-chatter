@@ -11,6 +11,7 @@ const getAllPosts = async () => {
   const response = await axios.get("/api/getposts");
   return response.data.data;
 };
+console.log()
 
 export default function ShowAllPosts() {
   const { isPending, isError, data, error } = useQuery<any[]>({

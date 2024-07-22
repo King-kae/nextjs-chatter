@@ -3,12 +3,12 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import useUsers from "../../hook/useUsers";
 import Head from "next/head";
-// import UserBio from "@/components/User/UserBio";
+import UserBio from "../../components/User/UserBio";
 import Avatar from "../../components/Avatar";
 import Image from "next/image";
 // import PostFeed from "@/components/shared/PostFeed";
 // import usePosts from "@/hooks/usePosts";
-// import TabSwitcher from "@/components/tabs";
+import TabSwitcher from "../../components/tabs";
 
 export default function UserId({ params }: { params: { userId: string } }) {
   const router = useRouter();
@@ -21,11 +21,11 @@ export default function UserId({ params }: { params: { userId: string } }) {
 //     (post: Record<string, any>) => post.userId === userId
 //   );
 
-//   const tabs = [
-//     { label: "Posts", content: <PostFeed data={post} /> },
-//     { label: "About", content: <div>Content for Tab 2</div> },
-//     { label: "Replies", content: <div>Content for Tab 3</div> },
-//   ];
+  // const tabs = [
+  //   { label: "Posts", content: <PostFeed data={post} /> },
+  //   { label: "About", content: <div>Content for Tab 2</div> },
+  //   { label: "Replies", content: <div>Content for Tab 3</div> },
+  // ];
     console.log(user)
 
   return (
@@ -49,7 +49,7 @@ export default function UserId({ params }: { params: { userId: string } }) {
         <div className="absolute top-40 left-5">
           <Avatar size="large" />
         </div>
-        {/* <UserBio /> */}
+        <UserBio params={{ userId }} />
       </div>
 
       {/* <TabSwitcher tabs={tabs} /> */}

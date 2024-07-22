@@ -1,13 +1,13 @@
 import axios from 'axios';
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useToast } from '../../hook/useToast';
 import useCurrentUser from '../../hook/useCurrentUser';
 import useUsers from '../../hook/useUsers';
-import { useEditProfileModal } from '../../hook/useModal';
+import { useEditModal } from '../../hook/useModal';
 import Modal from '../Modal';
 import Input from '../Input';
-import ImageUpload from '../Input/ImageUpload';
-import React from 'react';
+import ImageUpload from '../ImageInput/ImageUpload';
+
 
 const EditModal = () => {
     const { data: currentUser } = useCurrentUser();
@@ -32,7 +32,7 @@ const EditModal = () => {
         setLocation(currentUser?.location);
     }, [currentUser]);
 
-    const editModal = useEditProfileModal();
+    const editModal = useEditModal();
 
     const onSubmit = useCallback(async () => {
         try {
@@ -50,7 +50,7 @@ const EditModal = () => {
             editModal.onClose();
             toast.success('Profile updated successfully');
         } catch (error) {
-            toast.error('Something went wron');
+            toast.error('Something went wrong');
         } finally {
             setIsLoading(false);
         }

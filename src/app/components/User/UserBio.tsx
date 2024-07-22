@@ -2,25 +2,30 @@ import React from "react";
 import useUsers from "../../hook/useUsers";
 import useCurrentUser from "../../hook/useCurrentUser";
 import Button from "../Button";
-import { CalendarIcon } from "@heroicons/react/outline";
+import { BeakerIcon  } from "@heroicons/react/24/solid";
 // import { useEditModal } from '@/hooks/useEditModal';
-import { useRouter } from "next/router";
-import { useEditProfileModal } from "../../hook/useModal";
+import { useParams } from "next/navigation";
+import { useEditModal } from "../../hook/useModal";
 import useFollow from "../../hook/useFollow";
-export default function UserBio() {
+
+
+export default function UserBio({ params }: { params: { userId: string } }) {
   const { data: currentUser } = useCurrentUser();
-  const router = useRouter();
-  const { data: user } = useUsers(router.query?.userId as string);
-  const editModal = useEditProfileModal();
-  const { isFollowing, toggleFollow } = useFollow(user?.id as string);
+  const { userId } = params;
+//   const params = useParams<{ userId: string; }>()
+  
+  const { data: user } = useUsers(userId as string);
+  console.log(currentUser);
+  console.log(userId);
+  const editModal = useEditModal();
+  const { isFollowing, toggleFollow } = useFollow(user?._id as string);
   return (
     <div className="">
       <div className="flex justify-end p-4 mt-10 relative">
-        {currentUser?.id === router.query?.userId ? (
+        {currentUser?._id === userId ? (
           <div>
             <Button
               title="Edit Profile"
-              colors="secondary"
               onClick={editModal.onOpen}
             >
               Edit Profile
@@ -29,7 +34,6 @@ export default function UserBio() {
         ) : (
           <div>
             <Button
-              colors="secondary"
               onClick={toggleFollow}
               title={isFollowing ? "Unfollow" : "Follow"}
             >
@@ -41,7 +45,7 @@ export default function UserBio() {
       <div className="px-4 -mt-7">
         <div className="flex flex-col">
           <p className="text-2xl font-bold  text-black">
-            {user?.name}
+            {user?.username}
           </p>
           <p className="text-gray-700 font-thin ">
             @{user?.username}
@@ -52,8 +56,8 @@ export default function UserBio() {
           <div className="flex space-x-2 mt-2">
             <div className=" flex flex-col  text-sm pt-2">
               <div className=" flex flex-row  items-center space-x-1">
-                <CalendarIcon className="w-4 h-4"/>
-                <p>Joined {new Date(user?.createdAt).toLocaleDateString()}</p>
+                <BeakerIcon  className="w-4 h-4"/>
+                <p>Joined {' '} {new Date(user?.createdAt).toLocaleDateString()}</p>
                 <p>
                   {user?.location && (
                     <>

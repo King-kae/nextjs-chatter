@@ -7,6 +7,8 @@ import { Readable } from 'stream';
 // GET /posts
 
 export async function GET (req: NextRequest) {
+     console.log('GET /posts');
+    //  return NextResponse.json({ message: 'GET /posts' });
     try {
         const { client, bucket } = await connectToMongoDB();
 
@@ -46,3 +48,4 @@ export async function GET (req: NextRequest) {
 };
 
 
+export default GET;
