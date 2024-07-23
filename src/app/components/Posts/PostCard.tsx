@@ -5,6 +5,7 @@ import { PostImage } from "./PostImage";
 import Avatar from "../Avatar";
 import PreviewReactions from "./PreviewReactions";
 import LikeButton from "../LikeButton";
+import BookmarkButton from "../BookmarkButton";
 
 const formatDate = (date: string | number | Date) => {
   const options: Intl.DateTimeFormatOptions = {
@@ -46,6 +47,7 @@ const PostCard = (props: any) => {
             likes={likes}
           /> */}
             <LikeButton initialTitle={title} />
+            <BookmarkButton initialTitle={title} />
         </div>
       </div>
     </>

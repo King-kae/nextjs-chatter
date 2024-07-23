@@ -38,9 +38,9 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
 
-        const userHasLiked = post.likes.includes(userId);
+        const userHasBookmarked = post.bookmarks.includes(userId);
 
-        if (!userHasLiked) {
+        if (!userHasBookmarked) {
             post.bookmarks.push(userId);
             await post.save();
             await User.findByIdAndUpdate(userId, { $push: { bookmarks: post._id } });
