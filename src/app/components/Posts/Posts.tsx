@@ -2,11 +2,9 @@
 
 import React, { useState } from "react";
 import axios from "axios";
-import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
-import Image from "next/image";
 import PostList from "../PostList/PostList";
+import PostCard from "./PostCard";
 
 const getAllPosts = async () => {
   const response = await axios.get("/api/post");
@@ -26,10 +24,8 @@ export default function ShowAllPosts() {
   
   return (
       <div>
-          {/* <pre>
-              {JSON.stringify(data, null, 2)}
-          </pre> */}
       <PostList items={data} />
+      {/* <PostCard props={data}/> */}
       </div>
   );
 }
