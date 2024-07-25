@@ -39,7 +39,7 @@ const PostCard = (props: any) => {
           <AuthorInfo status="preview" author={author} date={createdAt} />
         </div>
         <div className="">
-          <a href={`/posts/${titleURL}/${id}`} className="title-link">
+          <a href={`/allposts/${title}`} className="title-link">
             <h2>{title}</h2>
           </a>
           {/* <PostTags tags={tags} /> */}
@@ -47,7 +47,9 @@ const PostCard = (props: any) => {
             likes={likes}
           /> */}
             <LikeButton initialTitle={title} />
+            <span>{likes && likes.length}</span>
             <BookmarkButton initialTitle={title} />
+            <span>{bookmarks.length}</span>
         </div>
       </div>
     </>

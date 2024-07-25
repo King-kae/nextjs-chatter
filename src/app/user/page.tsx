@@ -3,6 +3,7 @@
 import React from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { fetchUserPosts, deletePostByTitle } from '../../lib/fetchPost';
+import markdownToHtml from '../../lib/markdownToHtml';
 
 export default function UserPosts() {
   const { data: posts, error, isLoading, refetch } = useQuery({
@@ -16,6 +17,7 @@ export default function UserPosts() {
     },
   });
   console.log(posts)
+  // console.log(posts[])
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -25,16 +27,24 @@ export default function UserPosts() {
     return <div>Error: {error.message}</div>;
   }
 
+  const htmlContent =  markdownToHtml(posts?.[0]?.content ?? '');
+  console.log(htmlContent)
+
   return (
     <div>
       <h1>Your Posts</h1>
-      {posts?.map((post) => (
-        <div key={post._id}>
-          <h2>{post.title}</h2>
-          <p>{post.content}</p>
-          <button onClick={() => mutation.mutate(post.title)}>Delete</button>
-        </div>
-      ))}
+      {posts?.map((post) => {
+        const htmlContent = markdownToHtml(post.content ?? '');
+
+        return (
+          <div key={post._id}>
+            <h2>{post.title}</h2>
+            <p>{post.content}</p>
+            <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+            <button onClick={() => mutation.mutate(post.title)}>Delete</button>
+          </div>
+        );
+      })}
     </div>
   );
 }

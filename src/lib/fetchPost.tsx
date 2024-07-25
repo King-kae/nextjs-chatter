@@ -4,7 +4,7 @@ interface Post {
     content: string;
 }
 export async function fetchPost(title: string) {
-    const res = await fetch(`/api/getposts/${title}`);
+    const res = await fetch(`/api/post/${title}`);
     if (!res.ok) {
       throw new Error('Post not found');
     }
@@ -12,7 +12,7 @@ export async function fetchPost(title: string) {
 }
 
 export async function fetchComments(title: string) {
-    const res = await fetch(`/api/getposts/${title}/comments`);
+    const res = await fetch(`/api/post/${title}/comments`);
     if (!res.ok) {
       throw new Error('Error fetching comments');
     }

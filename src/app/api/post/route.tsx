@@ -56,6 +56,7 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
                 createdAt: new Date()
             },
         });
+
         stream.pipe(uploadStream);
 
         uploadStream.on('error', () => {

@@ -5,6 +5,7 @@ import { useToast } from "./useToast"; // Assuming you have a toast hook for not
 
 export const useLike = (initialTitle: any) => {
   const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [title, setTitle] = useState(initialTitle);
@@ -33,6 +34,7 @@ export const useLike = (initialTitle: any) => {
         }
 
         setLiked(data.liked);
+        setLikeCount(data.likeCount);
       } catch (err) {
         if (err instanceof Error) setError(err.message);
         else setError("An unexpected error occurred");
@@ -69,6 +71,7 @@ export const useLike = (initialTitle: any) => {
       }
 
       setLiked((prevLiked) => !prevLiked);
+      setLikeCount(prevLiked => prevLiked ? prevLiked - 1 : prevLiked + 1);
     } catch (err) {
       if (err instanceof Error) setError(err.message);
       else setError("An unexpected error occurred");
@@ -77,5 +80,5 @@ export const useLike = (initialTitle: any) => {
     }
   }, [title]);
 
-  return { liked, loading, error, toggleLike, setTitle };
+  return { liked, likeCount, loading, error, toggleLike, setTitle };
 };

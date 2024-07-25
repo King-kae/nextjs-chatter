@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import PostList from "../PostList/PostList";
-import PostCard from "./PostCard";
 
 const getAllPosts = async () => {
   const response = await axios.get("/api/post");
@@ -25,7 +24,6 @@ export default function ShowAllPosts() {
   return (
       <div>
       <PostList items={data} />
-      {/* <PostCard props={data}/> */}
       </div>
   );
 }

@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
 
         const userHasBookmarked = post.bookmarks.includes(userId);
 
-        return NextResponse.json({ bookmarked: userHasBookmarked }, { status: 200 });
+        return NextResponse.json({ bookmarked: userHasBookmarked, bookmarkCount: post.bookmarks.length }, { status: 200 });
     } catch (error) {
         console.error(error);
         return NextResponse.json({ error: 'An error occurred' }, { status: 500 });

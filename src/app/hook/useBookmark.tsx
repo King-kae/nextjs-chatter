@@ -5,6 +5,7 @@ import { useToast } from "./useToast"; // Assuming you have a toast hook for not
 
 export const useBookmark = (initialTitle: any) => {
   const [bookmarked, setBookmarked] = useState(false);
+    const [bookmarkCount, setBookmarkCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [title, setTitle] = useState(initialTitle);
@@ -33,6 +34,7 @@ export const useBookmark = (initialTitle: any) => {
         }
 
         setBookmarked(data.bookmarked);
+        setBookmarkCount(data.bookmarkCount);
       } catch (err) {
         if (err instanceof Error) setError(err.message);
         else setError("An unexpected error occurred");
@@ -69,6 +71,8 @@ export const useBookmark = (initialTitle: any) => {
       }
 
       setBookmarked((prevBookmarked) => !prevBookmarked);
+      setBookmarkCount(prevBookmarked => prevBookmarked ? prevBookmarked - 1 : prevBookmarked + 1);
+
     } catch (err) {
       if (err instanceof Error) setError(err.message);
       else setError("An unexpected error occurred");
@@ -77,5 +81,5 @@ export const useBookmark = (initialTitle: any) => {
     }
   }, [title]);
 
-  return { bookmarked, loading, error, toggleBookmark, setTitle };
+  return { bookmarked, bookmarkCount, loading, error, toggleBookmark, setTitle };
 };

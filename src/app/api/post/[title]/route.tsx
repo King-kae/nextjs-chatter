@@ -57,6 +57,7 @@ export async function DELETE(
     }
 
     const post = await Post.findOneAndDelete({ title, author: user._id });
+    await User.findByIdAndDelete(user._id, { $pull: { posts: post._id } });
 
     if (!post) {
       return NextResponse.json(

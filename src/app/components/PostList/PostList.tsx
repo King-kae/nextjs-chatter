@@ -14,7 +14,7 @@ const PostList = (props: any) => {
             props.items.map((post: any, i: any) => {
               return (
                 <PostCard
-                  key={post._id}
+                  key={post.id}
                   id={post._id}
                   title={post.title}
                   body={post.content}

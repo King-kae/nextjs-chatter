@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
 
         const userHasLiked = post.likes.includes(userId);
 
-        return NextResponse.json({ liked: userHasLiked }, { status: 200 });
+        return NextResponse.json({ liked: userHasLiked, likeCount: post.likes.length }, { status: 200 });
     } catch (error) {
         console.error(error);
         return NextResponse.json({ error: 'An error occurred' }, { status: 500 });
