@@ -1,9 +1,9 @@
 import React from 'react';
 
-export const PostImage = (props) => {
+export const PostImage = (props: any) => {
   if (props.link) {
     return (
-      <div className={`preview__image ${props.className}`}>
+      <div className={`preview__image ${props.className} p-8`}>
         <a href={props.link}>
           <img src={props.src} alt={props.alt} />
         </a>

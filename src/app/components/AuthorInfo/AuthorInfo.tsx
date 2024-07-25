@@ -1,12 +1,12 @@
 import React from 'react';
 import './AuthorInfo.css';
 
-export const AuthorInfo = ({ author, date, status }: { author: any, date: any, status: string }) => {
+export const AuthorInfo = ({ author, createdAt, status }: { author: any, createdAt: any, status: string }) => {
   if (status === 'preview') {
     return (
       <div className='author__details'>
         <p className='author__name'>{author?.name}</p>
-        <p className='author__date'>{date}</p>
+        <p className='author__date'>{createdAt}</p>
       </div>
     );
   }

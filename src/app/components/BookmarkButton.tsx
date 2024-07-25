@@ -9,13 +9,13 @@ const LikeButton = ({ initialTitle }: { initialTitle: string }) => {
     };
 
     return (
-        <div>
+        <div className='flex'>
             <button onClick={handleBookmarkClick} disabled={loading}>
                 {bookmarked ? 'Unbookmark' : 'Bookmark'}
             </button>
-            <p>Bookmarks: {bookmarkCount}</p>
-            {loading && <p>Loading...</p>}
-            {error && <p>Error: {error}</p>}
+            <p>{bookmarkCount}</p>
+            {/* {loading && <p>Loading...</p>}
+            {error && <p>Error: {error}</p>} */}
         </div>
     );
 };

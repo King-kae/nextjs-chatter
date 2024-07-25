@@ -22,7 +22,7 @@ export default function ShowAllPosts() {
 
   
   return (
-      <div>
+      <div className="flex justify-center items-center">
       <PostList items={data} />
       </div>
   );

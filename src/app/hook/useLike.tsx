@@ -65,13 +65,14 @@ export const useLike = (initialTitle: any) => {
       });
 
       const data = await response.json();
-
+      console.log(data.likes.length);
       if (!response.ok) {
         throw new Error(data.error || "Something went wrong");
       }
 
+
       setLiked((prevLiked) => !prevLiked);
-      setLikeCount(prevLiked => prevLiked ? prevLiked - 1 : prevLiked + 1);
+      setLikeCount(data.likes.length);
     } catch (err) {
       if (err instanceof Error) setError(err.message);
       else setError("An unexpected error occurred");

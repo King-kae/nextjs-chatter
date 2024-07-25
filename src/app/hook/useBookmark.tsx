@@ -71,7 +71,7 @@ export const useBookmark = (initialTitle: any) => {
       }
 
       setBookmarked((prevBookmarked) => !prevBookmarked);
-      setBookmarkCount(prevBookmarked => prevBookmarked ? prevBookmarked - 1 : prevBookmarked + 1);
+      setBookmarkCount(data.bookmarks.length);
 
     } catch (err) {
       if (err instanceof Error) setError(err.message);
