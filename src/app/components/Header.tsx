@@ -50,7 +50,7 @@ export default function Header() {
           <a href="post" className="text-sm font-semibold leading-6 text-gray-900">
             Write
           </a>
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
+          <a href="/allposts" className="text-sm font-semibold leading-6 text-gray-900">
             Our Story
           </a>
           <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
@@ -93,7 +93,7 @@ export default function Header() {
                   Write
                 </a>
                 <a
-                  href="#"
+                  href="/allposts"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   Our Story

@@ -15,99 +15,6 @@ interface PostPageProps {
   params: { title: string };
 }
 
-// export default function PostPage({ params }: PostPageProps) {
-//   const { title } = params;
-//   const { data: session } = useSession();
-//   const { data: post, error, isLoading } = useQuery({
-//     queryKey: ['post', title] ,
-//     queryFn: () => fetchPost(title),
-//   });
-//   const [comments, setComments] = useState<{
-//     user: any;
-//     content: ReactNode; _id: string
-// }[]>([]);
-// const [loading, setLoading] = useState(true);
-// const [commentError, setCommentError] = useState<string | null>(null);
-
-// useEffect(() => {
-//   if (!title) return;
-
-//   const fetchComments = async () => {
-//     try {
-//       const response = await fetch(`/api/post/${title}/comments`);
-//       if (!response.ok) throw new Error('Failed to fetch');
-//       const data = await response.json();
-//       setComments(data);
-//     } catch (err) {
-//       setCommentError('errror fetching comments');
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   fetchComments();
-// }, [title]);
-
-// if (loading) return <p>Loading comments...</p>;
-// if (error) return <p>{commentError}</p>;
-// if (comments.length === 0) return <p>No comments available</p>;
-
-//   if (isLoading) {
-//     return <div>Loading...</div>;
-//   }
-
-//   if (error) {
-//     return <div>Error: {(error as Error).message}</div>;
-//   }
-//   const handleCommentSubmit = async (content: string) => {
-//     try {
-//       const res = await fetch(`/api/post/${title}/comments`, {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({ content }),
-//       });
-
-//       if (!res.ok) {
-//         throw new Error('Error posting comment');
-//       }
-
-//       await res.json();
-//       // refetch(); // Refetch post data to get the latest comments
-//     } catch (err: any) {
-//       const error = err as Error;
-//       setCommentError(error.message);
-//     }
-//   };
-
-//   console.log(post);
-
-//   return (
-//     <div>
-//       <h1>{post.title}</h1>
-//       <img src={post.imageURL} alt={post.title} style={{ maxWidth: '100%' }} />
-//       <p>{post.content}</p>
-//       <div>
-//       <LikeButton initialTitle={`${post.title}`} />
-//       <BookmarkButton initialTitle={`${post.title}`} />
-//       </div>
-
-//       {session && <CommentForm postTitle={post.title} onCommentPosted={handleCommentSubmit} />}
-//       {/* {commentError && <p>Error posting comment: {commentError}</p>} */}
-
-//       <h2>Comments</h2>
-//       <div>
-//       {comments.map(comment => (
-//         <div key={comment._id}>
-//           <h4>{comment.user.username}</h4>
-//           <p>{comment.content}</p>
-//         </div>
-//       ))}
-//     </div>
-//     </div>
-//   );
-// }
 
 interface Comment {
   user: {
@@ -187,7 +94,6 @@ export default function PostPage({ params }: PostPageProps) {
     <div>
       <h1>{post.title}</h1>
       <img src={post.imageURL} alt={post.title} style={{ maxWidth: "100%" }} />
-      {/* <p>{post.content}</p> */}
       <div
         dangerouslySetInnerHTML={{ __html: htmlContent as string }}
         style={{ lineHeight: "1.5" }}

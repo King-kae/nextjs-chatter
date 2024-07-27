@@ -3,20 +3,46 @@ import React, { useState, useRef } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { marked } from "marked";
-// import DOMPurify from "dompurify";
-
+import Image from "next/image";
+import {
+  BoldIcon,
+  UnderlineIcon,
+  ItalicIcon,
+  LinkIcon,
+  PhotoIcon,
+  StrikethroughIcon,
+  ListBulletIcon,
+  NumberedListIcon,
+  CodeBracketIcon,
+  H1Icon,
+  CodeBracketSquareIcon,
+} from "@heroicons/react/24/outline";
 
 export default function CreatePost() {
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
+  const [previewUrl, setPreviewUrl] = useState(null);
   const [markdown, setMarkdown] = useState("");
   const [message, setMessage] = useState("");
   const router = useRouter();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setFile(e.target.files[0]);
+      const file = e.target.files[0];
+      try {
+        const response = await axios.post("/api/upload", file, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log("Image URL:", response.data.imageURL);
+        const imageURL = response.data.imageURL;
+        setPreviewUrl(imageURL);
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
     }
   };
 
@@ -27,14 +53,19 @@ export default function CreatePost() {
       const selectedText = value.substring(selectionStart, selectionEnd);
       const newText = `${startTag}${selectedText}${endTag}`;
       setMarkdown(
-        `${value.substring(0, selectionStart)}${newText}${value.substring(selectionEnd)}`
+        `${value.substring(0, selectionStart)}${newText}${value.substring(
+          selectionEnd
+        )}`
       );
 
       // Set cursor position correctly after inserting syntax
       setTimeout(() => {
         // If there was selected text, place the cursor at the end of the selected text
         // Otherwise, place the cursor between the start and end tags
-        const cursorPosition = selectionStart + startTag.length + (selectedText ? selectedText.length : 0);
+        const cursorPosition =
+          selectionStart +
+          startTag.length +
+          (selectedText ? selectedText.length : 0);
         textarea.setSelectionRange(cursorPosition, cursorPosition);
         textarea.focus();
       }, 0);
@@ -51,25 +82,11 @@ export default function CreatePost() {
   const handleCodeBlock = () => insertMarkdownSyntax("```\n", "\n```");
   const handleHeading = () => insertMarkdownSyntax("# ");
   const handleLink = () => insertMarkdownSyntax("[Link description](url)");
-  // const handleLink = () => {
-  //   const url = prompt("Enter the URL:");
-  //   if (url) {
-  //     insertMarkdownSyntax(`[`, `](${url})`);
-  //   }
-  // };
-  // const handleImage = () => insertMarkdownSyntax("![Image description](url)");
-  // const handleImage = () => {
-  //   const url = prompt("Enter the image URL:");
-  //   if (url) {
-  //     insertMarkdownSyntax(`![alt text](${url})`);
-  //   }
-  // };
-
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      
+
       try {
         const response = await axios.post("/api/upload", file, {
           headers: {
@@ -79,7 +96,6 @@ export default function CreatePost() {
         console.log("Image URL:", response.data.imageURL);
         const imageURL = response.data.imageURL;
         insertMarkdownSyntax(`![Image description](${imageURL})`);
-
       } catch (error) {
         console.error("Error uploading image:", error);
       }
@@ -91,8 +107,14 @@ export default function CreatePost() {
       const fileInput = document.createElement("input");
       fileInput.type = "file";
       fileInput.accept = "image/*";
-      fileInput.onchange = (e) => handleImageUpload(e as unknown as React.ChangeEvent<HTMLInputElement>);
+      fileInput.onchange = (e) =>
+        handleImageUpload(e as unknown as React.ChangeEvent<HTMLInputElement>);
       fileInput.click();
+    }
+  };
+  const handleButtonClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
     }
   };
 
@@ -125,18 +147,40 @@ export default function CreatePost() {
   };
 
   return (
-    <div style={{ maxWidth: "800px", margin: "0 auto", padding: "20px" }}>
+    <div
+      style={{
+        maxWidth: "800px",
+        margin: "0 auto",
+        padding: "20px",
+        backgroundColor: "#ccc",
+      }}
+    >
       <h1>Create Post</h1>
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: "15px" }}>
-          <label htmlFor="image">Cover Image:</label>
-          <input
-            type="file"
-            id="image"
-            accept="image/*"
-            onChange={handleFileChange}
-            style={{ display: "block", marginTop: "10px" }}
-          />
+          <label htmlFor="image">
+            <input
+              type="file"
+              id="image"
+              accept="image/*"
+              onChange={handleFileChange}
+              style={{ display: 'none' }}
+              ref={fileInputRef}
+            />
+            <button type="button" onClick={handleButtonClick} className="bg-black text-white hover:bg-white hover:text-black py-3 px-4" >
+              Upload cover image
+            </button>
+            {previewUrl && (
+              <div style={{ marginTop: "20px" }}>
+                <Image
+                  src={previewUrl}
+                  alt="Preview"
+                  width={300}
+                  height={200}
+                />
+              </div>
+            )}
+          </label>
         </div>
         <div style={{ marginBottom: "15px" }}>
           <label htmlFor="title">Title:</label>
@@ -145,23 +189,70 @@ export default function CreatePost() {
             id="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            style={{ width: "100%", padding: "10px", fontSize: "16px", marginTop: "10px" }}
+            style={{
+              width: "100%",
+              padding: "10px",
+              fontSize: "16px",
+              marginTop: "10px",
+            }}
+            placeholder="Enter the title of your post"
           />
         </div>
         <div style={{ marginBottom: "15px" }}>
-          <label htmlFor="markdown">Markdown Content:</label>
-          <div style={{ marginBottom: "10px" }}>
-            <button type="button" onClick={handleBold}><b>Bold</b></button>
-            <button type="button" onClick={handleItalic}><i>Italic</i></button>
-            <button type="button" onClick={handleStrikethrough}>Strikethrough</button>
-            <button type="button" onClick={handleUnderline}><u>Underline</u></button>
-            <button type="button" onClick={handleUnorderedList}>Unordered List</button>
-            <button type="button" onClick={handleOrderedList}>Ordered List</button>
-            <button type="button" onClick={handleCode}>Inline Code</button>
-            <button type="button" onClick={handleCodeBlock}>Code Block</button>
-            <button type="button" onClick={handleHeading}>Heading</button>
-            <button type="button" onClick={handleLink}>Link</button>
-            <button type="button" onClick={handleImage}>Image</button>
+          <label htmlFor="markdown">Content:</label>
+          <div
+            className="text-center flex gap-9"
+            style={{ marginBottom: "10px" }}
+          >
+            <button title="Bold Text" type="button" onClick={handleBold}>
+              <BoldIcon className="h-6 w-6" />
+            </button>
+            <button title="Italic Text" type="button" onClick={handleItalic}>
+              <ItalicIcon className="h-6 w-6" />
+            </button>
+            <button
+              title="Strikethrough Text"
+              type="button"
+              onClick={handleStrikethrough}
+            >
+              <StrikethroughIcon className="h-6 w-6" />
+            </button>
+            <button
+              title="Underline Text"
+              type="button"
+              onClick={handleUnderline}
+            >
+              <UnderlineIcon className="h-6 w-6" />
+            </button>
+            <button
+              title=" Bullet List"
+              type="button"
+              onClick={handleUnorderedList}
+            >
+              <ListBulletIcon className="h-6 w-6" />
+            </button>
+            <button
+              title="Number List"
+              type="button"
+              onClick={handleOrderedList}
+            >
+              <NumberedListIcon className="h-6 w-6" />
+            </button>
+            <button title="Single line code" type="button" onClick={handleCode}>
+              <CodeBracketIcon className="h-6 w-6" />
+            </button>
+            <button title="Code Block" type="button" onClick={handleCodeBlock}>
+              <CodeBracketSquareIcon className="h-6 w-6" />
+            </button>
+            <button title="Header" type="button" onClick={handleHeading}>
+              <H1Icon className="h-6 w-6" />
+            </button>
+            <button title="Add Link" type="button" onClick={handleLink}>
+              <LinkIcon className="h-6 w-6" />
+            </button>
+            <button title="Add Image" type="button" onClick={handleImage}>
+              <PhotoIcon className="h-6 w-6" />
+            </button>
           </div>
           <textarea
             ref={textareaRef}
@@ -177,16 +268,31 @@ export default function CreatePost() {
               fontSize: "16px",
               lineHeight: "1.5",
             }}
+            placeholder="Enter your content here"
           />
         </div>
-        <div style={{ border: "1px solid #ccc", padding: "10px", marginBottom: "15px" }}>
+        <div
+          style={{
+            border: "1px solid #ccc",
+            padding: "10px",
+            marginBottom: "15px",
+          }}
+        >
           <h2>Preview</h2>
           <div
-            dangerouslySetInnerHTML={{ __html: marked.parse(markdown) as string }}
+            dangerouslySetInnerHTML={{
+              __html: marked.parse(markdown) as string,
+            }}
             style={{ lineHeight: "1.5" }}
           />
         </div>
-        <button type="submit" style={{ padding: "10px 20px", fontSize: "16px" }}>Upload Post</button>
+        <button
+          type="submit"
+          className="bg-black text-white hover:bg-white hover:text-black"
+          style={{ padding: "10px 20px", fontSize: "16px" }}
+        >
+          Upload Post
+        </button>
       </form>
       {message && <p>{message}</p>}
     </div>
