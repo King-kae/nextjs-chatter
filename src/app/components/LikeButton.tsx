@@ -10,7 +10,14 @@ const LikeButton = ({ initialTitle }: { initialTitle: string }) => {
 
     return (
         <div className='flex'>
-            <button onClick={handleLikeClick} disabled={loading}>
+            <button 
+                onClick={handleLikeClick} 
+                disabled={loading}
+                className={`hover:bg-blue ${liked
+                    ? "bg-blue text-red"
+                    : "bg-neutral-200 dark:bg-neutral-700"
+                }  px-3 transition-colors duration-300`}
+            >
                 {liked ? 'Unlike' : 'Like'}
             </button>
             <p>{likeCount}</p>

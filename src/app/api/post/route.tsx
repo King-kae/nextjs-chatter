@@ -91,6 +91,7 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
 // export default POST;
 
 export async function GET (req: NextRequest) {
+    console.log('here')
     try {
         const { client, bucket } = await connectToMongoDB();
 
@@ -98,7 +99,7 @@ export async function GET (req: NextRequest) {
         const posts = await Post.find().populate('author');
 
         if (!posts || posts.length === 0) {
-            return NextResponse.json({ message: 'No posts found' }, { status: 404 });
+            return NextResponse.json({ message: 'No posts found' });
         }
 
         // Prepare the posts data to include all fields
@@ -111,7 +112,9 @@ export async function GET (req: NextRequest) {
                 id: post.author._id,
                 name: post.author.username,
                 email: post.author.email,
+                avatar: post.author.avatar
             },
+            date: post.date,
             createdAt: post.createdAt,
             updatedAt: post.updatedAt,
             likes: post.likes,

@@ -1,10 +1,11 @@
 import Image from "next/image";
 import React, { useCallback } from "react";
 import useCurrentUser from "../hook/useCurrentUser";
-import { useRouter } from "next/router";
-// import useUsers from "@/hooks/useUsers";
+import { useRouter } from "next/navigation";
+import useUsers from "../hook/useUsers";
 
 interface AvatarProps {
+  seed?: string;
   size?: "tiny" | "small" | "medium" | "large" | "extra-large";
 }
 interface SubClasses {
@@ -19,8 +20,20 @@ const sizeVariants: SubClasses = {
   "extra-large": "w-24 aspect-square",
 };
 
-export default function Avatar({ size }: AvatarProps) {
-  const { data: user } = useCurrentUser();
+export default function Avatar({ seed, size }: AvatarProps) {
+  const router = useRouter();
+  const { data: user } = useUsers(seed);
+
+  const onClick = useCallback(
+    (event: any) => {
+        event.stopPropagation();
+
+        const url = `/user/${seed}`;
+
+        router.push(url);
+    },
+    [router, seed]
+);
 
   return (
     <div
@@ -39,6 +52,7 @@ export default function Avatar({ size }: AvatarProps) {
         className={` absolute top-0 left-0 object-cover rounded-full w-16 aspect-square ${
           size ? sizeVariants[size] : ""
         }`}
+        onClick={onClick}
       />
     </div>
   );

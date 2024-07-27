@@ -16,7 +16,7 @@ export async function fetchComments(title: string) {
     if (!res.ok) {
       throw new Error('Error fetching comments');
     }
-    return res.json();
+    return res.json() || [];
 }
   
   export const fetchUserPosts = async (): Promise<Post[]> => {

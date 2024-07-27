@@ -6,8 +6,13 @@ import { useQuery } from "@tanstack/react-query";
 import PostList from "../PostList/PostList";
 
 const getAllPosts = async () => {
-  const response = await axios.get("/api/post");
-  return response.data.data;
+  try {
+      const response = await axios.get("/api/post");
+      return response.data.data || [];
+  } catch (error: any) {
+      console.log(error);
+      return { error: error.message }
+  }
 };
 
 export default function ShowAllPosts() {
@@ -22,8 +27,11 @@ export default function ShowAllPosts() {
 
   
   return (
+    <>
+      {!data.length && <div> No data</div>}
       <div className="flex justify-center items-center">
       <PostList items={data} />
       </div>
+    </>
   );
 }

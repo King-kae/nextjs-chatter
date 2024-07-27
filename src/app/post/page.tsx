@@ -91,7 +91,7 @@ export default function CreatePost() {
       const fileInput = document.createElement("input");
       fileInput.type = "file";
       fileInput.accept = "image/*";
-      fileInput.onchange = handleImageUpload;
+      fileInput.onchange = (e) => handleImageUpload(e as unknown as React.ChangeEvent<HTMLInputElement>);
       fileInput.click();
     }
   };
@@ -182,7 +182,7 @@ export default function CreatePost() {
         <div style={{ border: "1px solid #ccc", padding: "10px", marginBottom: "15px" }}>
           <h2>Preview</h2>
           <div
-            dangerouslySetInnerHTML={{ __html: marked.parse(markdown) }}
+            dangerouslySetInnerHTML={{ __html: marked.parse(markdown) as string }}
             style={{ lineHeight: "1.5" }}
           />
         </div>

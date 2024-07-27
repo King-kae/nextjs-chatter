@@ -4,8 +4,8 @@ import { Schema, model, models } from "mongoose";
 const commentSchema = new Schema({
   content: { type: String, required: true },
   date: { type: Date, default: Date.now },
-  postId: { type: Schema.Types.ObjectId, required: true, ref: "Post" },
-  parentId: { type: Schema.Types.ObjectId, ref: "Comment", default: null },
+  postId: [{ type: Schema.Types.ObjectId, required: true, ref: "Post" }],
+  parentId: [{ type: Schema.Types.ObjectId, ref: "Comment", default: null }],
   author: { type: Schema.Types.ObjectId, required: true, ref: "User" },
   likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
 });

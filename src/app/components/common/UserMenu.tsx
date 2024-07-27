@@ -8,7 +8,7 @@ import Image from "next/image";
 import { ChevronDownIcon, ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import avatar from "../../../../public/default.png";
-// import avatatr from "@"
+import Avatar from "../Avatar"
 
 function UserMenu() {
     const [isOpen, setIsOpen] = useState(false);
@@ -29,13 +29,7 @@ function UserMenu() {
                         className="flex items-center gap-x-2 text-gray-700"
                     >
                         <span className="text-sm font-semibold">{session.user?.name}</span>
-                        <Image 
-                            src={session.user?.image || avatar}
-                            alt="profile picture"
-                            width={32}
-                            height={32}
-                            className="rounded-full"
-                        />
+                        <Avatar size="small" />
                         {isOpen ? (
                             <ChevronUpDownIcon className="h-4 w-4" />
                         ) : (

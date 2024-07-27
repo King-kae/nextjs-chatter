@@ -19,7 +19,7 @@ const PostList = (props: any) => {
                   title={post.title}
                   body={post.content}
                   image={post.imageURL}
-                  date={post.createdAt}
+                  date={post.date}
                   author={props.author || post.author}
                   //   tags={post.tags}
                   titleURL={post.titleURL}

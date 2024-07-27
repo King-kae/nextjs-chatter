@@ -6,13 +6,26 @@ import Head from "next/head";
 import UserBio from "../../components/User/UserBio";
 import Avatar from "../../components/Avatar";
 import Image from "next/image";
+import { useQuery } from "@tanstack/react-query"; // Import the useQuery function from the react-query library
 // import PostFeed from "@/components/shared/PostFeed";
 // import usePosts from "@/hooks/usePosts";
 import TabSwitcher from "../../components/tabs";
+import { fetchUserPosts } from "@/lib/fetchPost";
+import PostList from "@/app/components/PostList/PostList";
 
 export default function UserId({ params }: { params: { userId: string } }) {
   const router = useRouter();
   const { userId } = params;
+
+  const {
+    data: posts,
+    error,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["userPosts"],
+    queryFn: fetchUserPosts,
+  });
 
   const { data: user } = useUsers(userId as string);
 //   const { data: posts = [] } = usePosts();
@@ -21,11 +34,11 @@ export default function UserId({ params }: { params: { userId: string } }) {
 //     (post: Record<string, any>) => post.userId === userId
 //   );
 
-  // const tabs = [
-  //   { label: "Posts", content: <PostFeed data={post} /> },
-  //   { label: "About", content: <div>Content for Tab 2</div> },
-  //   { label: "Replies", content: <div>Content for Tab 3</div> },
-  // ];
+  const tabs = [
+    { label: "Posts", content: <PostList items={posts} /> },
+    { label: "About", content: <div>Content for Tab 2</div> },
+    { label: "Replies", content: <div>Content for Tab 3</div> },
+  ];
     console.log(user)
 
   return (
@@ -38,7 +51,7 @@ export default function UserId({ params }: { params: { userId: string } }) {
           <Image
             alt="Banner"
             src={
-              user?.avatar ||
+              user?.coverphoto ||
               "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1173&q=80"
             }
             width={1000}
@@ -47,12 +60,12 @@ export default function UserId({ params }: { params: { userId: string } }) {
           />
         </div>
         <div className="absolute top-40 left-5">
-          <Avatar size="large" />
+          <Avatar seed={userId} size="large" />
         </div>
         <UserBio params={{ userId }} />
       </div>
 
-      {/* <TabSwitcher tabs={tabs} /> */}
+      <TabSwitcher tabs={tabs} />
     </>
   );
 }

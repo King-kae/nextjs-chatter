@@ -5,6 +5,10 @@ const userSchema = new Schema({
     type: String,
     default: "",
   },
+  coverphoto: {
+    type: String,
+    default: "",
+  },
   username: { 
     type: String, 
     trim: true

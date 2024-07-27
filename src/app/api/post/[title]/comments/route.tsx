@@ -54,7 +54,7 @@ export async function POST(req: NextRequest, { params }: { params: { title: stri
 
 export async function GET(req: NextRequest, { params }: { params: { title: string } }) {
   const { title } = params;
-
+console.log('here')
   if (!title) {
     return NextResponse.json({ message: 'Title is required' }, { status: 400 });
   }
@@ -68,7 +68,22 @@ export async function GET(req: NextRequest, { params }: { params: { title: strin
       return NextResponse.json({ message: 'Post not found' }, { status: 404 });
     }
 
-    return NextResponse.json(post);
+     // Fetch comments related to the post
+     const comments = await Comment.aggregate([
+      { $match: { postId: post._id } },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'author',
+          foreignField: '_id',
+          as: 'user',
+        },
+      },
+      { $unwind: '$user' },
+    ]);
+    console.log(comments)
+
+    return NextResponse.json(comments);
   } catch (error) {
     return NextResponse.json({ message: 'Error retrieving post', error }, { status: 500 });
   }

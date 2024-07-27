@@ -1,13 +1,25 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import {NextResponse} from "next/server";
+import {NextRequest, NextResponse} from "next/server";
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../../../app/api/auth/[...nextauth]/route';
 import connectToMongoDB from '../../../lib/db';
 import User from '../../../models/user';
 import serverAuth from '../../../lib/serverAuth';
 
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
+export async function POST(req: NextRequest, res: NextApiResponse) {
+    console.log('here')
     try {
-        const { currentUser } = await serverAuth(req, res);
-        const { userId } = req.body;
+        const session = await getServerSession(authOptions);
+        const { userId } = await req.json();
+
+        if (!session) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+    
+        const currentUser = await User.findOne({ email: session.user?.email });
+        if (!currentUser) {
+            return NextResponse.json({ error: 'User not found' }, { status: 404 });
+        }
 
         if (!userId || typeof userId !== 'string') {
             return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
@@ -21,9 +33,18 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
 
-        if (!currentUser.following.includes(userId)) {
+        const userHasFollowed = currentUser.following.includes(userId);
+
+        if (!userHasFollowed) {
             currentUser.following.push(userId);
             await currentUser.save();
+            await User.findByIdAndUpdate(userId, { $push: { followers: currentUser._id } });
+        } else {
+            currentUser.following = currentUser.following.filter(
+                (followingId: string) => followingId !== userId
+            );
+            await currentUser.save();
+            await User.findByIdAndUpdate(userId, { $pull: { followers: currentUser._id } });
         }
 
         return NextResponse.json(currentUser, { status: 200 });
@@ -33,13 +54,18 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
     }
 }
 
-export async function DELETE(req: NextApiRequest, res: NextApiResponse) {
+export async function DELETE(req: NextRequest, res: NextApiResponse) {
     try {
-        const { currentUser } = await serverAuth(req, res);
-        const { userId } = req.body;
+        const session = await getServerSession(authOptions);
+        const { userId } = await req.json();
 
-        if (!userId || typeof userId !== 'string') {
-            return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
+        if (!session) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+    
+        const currentUser = await User.findOne({ email: session.user?.email });
+        if (!currentUser) {
+            return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
 
         const { client } = await connectToMongoDB();
@@ -53,6 +79,8 @@ export async function DELETE(req: NextApiRequest, res: NextApiResponse) {
         currentUser.following = currentUser.following.filter(
             (followingId: string) => followingId !== userId
         );
+        await User.findByIdAndUpdate(userId, { $pull: { followers: currentUser._id } });
+        await User.findByIdAndUpdate(currentUser._id, { $pull: { following: userId } });
         await currentUser.save();
 
         return NextResponse.json(currentUser, { status: 200 });

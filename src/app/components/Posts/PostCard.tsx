@@ -22,9 +22,9 @@ const PostCard = (props: any) => {
   const { data: currentUser } = useCurrentUser();
   const userId = currentUser?._id;
 
-  const { title, id, image, author, createdAt, titleURL, tags, likes, bookmarks } = props;
-  console.log(createdAt)
-  const date = formatDate(createdAt);
+  const { title, id, image, author, date, titleURL, tags, likes, bookmarks } = props;
+  const formattedDate = formatDate(date);
+  console.log(formattedDate)
   return (
     <>
       <div className="bg-white rounded-b-lg">
@@ -35,8 +35,8 @@ const PostCard = (props: any) => {
           className="post__image"
         />
         <div className="flex gap-x-8 p-8">
-          <Avatar size="small" />
-          <AuthorInfo status="preview" author={author} createdAt={createdAt} />
+          <Avatar seed={author.id} size="small" />
+          <AuthorInfo status="preview" author={author} date={formattedDate} />
         </div>
         <div className="px-8">
           <a href={`/allposts/${title}`} className="title-link">
