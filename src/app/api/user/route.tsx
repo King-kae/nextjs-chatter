@@ -1,8 +1,9 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import connectToDB from '../../../lib/db'
 import User from '../../../models/user'; // Adjust the path to your User model
 import {authOptions} from '../auth/[...nextauth]/route'
+import { NextApiResponse } from 'next';
 
 export async function GET(request: any) {
     const { req, res } = request;
@@ -56,14 +57,14 @@ export async function GET(request: any) {
     }
 }
 
-export async function PUT(request: any) {
-    const { req, res } = request;
+export async function PUT(req: NextRequest, res: NextApiResponse) {
+    // const { req, res } = request;
     
     try {
         // Connect to database
         const { client } = await connectToDB();
         // Get session
-        const session = await getServerSession({ req: request, res: NextResponse, ...authOptions });
+        const session = await getServerSession(authOptions);
         
         if (!session?.user?.email) {
             return NextResponse.json(
@@ -85,9 +86,11 @@ export async function PUT(request: any) {
         }
 
         // Update user data
-        const { name, bio, location, work, skills, links } = req.body;
-        user.name = name;
+        const { username, bio, location, work, skills, links, coverImage } = await req.json();
+        //  console.log(req.json())
+        user.username = username;
         user.bio = bio;
+        user.coverphoto = coverImage
         user.location = location;
         user.work = work;
         user.skills = skills;
