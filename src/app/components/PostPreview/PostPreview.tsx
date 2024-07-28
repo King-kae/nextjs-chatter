@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
-// import PreviewReactions from '../PostPreview/PreviewReactions';
 import Avatar from '../Avatar'
 import { AuthorInfo } from '../AuthorInfo/AuthorInfo';
-// import { PostImage } from '../PostImage/PostImage';
-// import { formatDate } from '../../utils';
 import useCurrentUser from '../../hook/useCurrentUser';
 
 const formatDate = (date: string | number | Date) => {

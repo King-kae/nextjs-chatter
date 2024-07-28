@@ -2,23 +2,24 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { fetchPost } from "../../../lib/fetchPost";
-import React, { ReactNode, useEffect, useState } from "react";
+import { fetchPost } from "@/lib/fetchPost";
+import React, { ReactNode } from "react";
 import { useSession } from "next-auth/react";
-import CommentForm from "../../components/CommentForm";
+import CommentForm from "@/app/components/CommentForm";
 import Avatar from "@/app/components/Avatar";
 import LikeButton from "@/app/components/LikeButton";
 import BookmarkButton from "@/app/components/BookmarkButton";
 import { marked } from "marked";
+import useCurrentUser from "@/app/hook/useCurrentUser";
+import { AuthorInfo } from "@/app/components/AuthorInfo/AuthorInfo";
 
 interface PostPageProps {
   params: { title: string };
 }
 
-
 interface Comment {
   user: {
-    [x: string]: string | undefined;
+    _id: string | undefined;
     avatar: string | undefined;
     username: string;
   };
@@ -34,9 +35,25 @@ const fetchComments = async (title: string): Promise<Comment[]> => {
   return response.json();
 };
 
+const formatDate = (date: string | number | Date) => {
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  };
+  const today = new Date(date);
+
+  return today.toLocaleDateString("en-US", options);
+};
+
 export default function PostPage({ params }: PostPageProps) {
   const { title } = params;
   const { data: session } = useSession();
+  const { data: currentUser } = useCurrentUser();
+
+  console.log(currentUser);
+
+  const formattedDate = formatDate(currentUser?.createdAt);
 
   // Fetch post data
   const {
@@ -82,43 +99,57 @@ export default function PostPage({ params }: PostPageProps) {
   };
 
   if (postLoading || commentsLoading) {
-    return <div>Loading...</div>;
+    return <div className="flex justify-center items-center h-screen">Loading...</div>;
   }
 
   if (postError || commentsError) {
-    return <div>Error: {(postError || commentsError)?.message}</div>;
+    return <div className="flex justify-center items-center h-screen">Error: {(postError || commentsError)?.message}</div>;
   }
-  const htmlContent = marked.parse(post.content)
+
+  const htmlContent = marked.parse(post.content);
 
   return (
-    <div>
-      <h1>{post.title}</h1>
-      <img src={post.imageURL} alt={post.title} style={{ maxWidth: "100%" }} />
-      <div
-        dangerouslySetInnerHTML={{ __html: htmlContent as string }}
-        style={{ lineHeight: "1.5" }}
+    <div className="container mx-auto px-4 py-8">
+      <img
+        src={post.imageURL}
+        alt={post.title}
+        className="w-full h-auto max-h-96 object-cover mb-8 rounded-md shadow-md"
       />
-      <div>
+      <div className="flex items-center gap-x-4 p-4 bg-white shadow rounded-md">
+        <Avatar seed={currentUser._id} size="small" />
+        <AuthorInfo status="preview" author={currentUser} date={formattedDate} />
+      </div>
+
+      <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
+      <div
+        className="prose max-w-none mb-8"
+        dangerouslySetInnerHTML={{ __html: htmlContent as string }}
+      />
+      <div className="flex items-center space-x-4 mb-8">
         <LikeButton initialTitle={post.title} />
         <BookmarkButton initialTitle={post.title} />
       </div>
 
       {session && (
-        <CommentForm
-          postTitle={post.title}
-          onCommentPosted={handleCommentSubmit}
-        />
+        <div className="mb-8">
+          <CommentForm
+            postTitle={post.title}
+            onCommentPosted={handleCommentSubmit}
+          />
+        </div>
       )}
 
-      <h2>Comments</h2>
+      <h2 className="text-2xl font-semibold mb-4">Comments</h2>
       <div>
         {comments?.length === 0 ? (
           <p>No comments available</p>
         ) : (
           comments?.map((comment) => (
-            <div key={comment._id}>
-              <Avatar seed={comment.user._id} size="small" />
-              <h4>{comment.user.username}</h4>
+            <div key={comment._id} className="mb-6 border-b pb-4">
+              <div className="flex items-center mb-2">
+                <Avatar seed={comment.user._id} size="small" />
+                <h4 className="ml-2 font-semibold">{comment.user.username}</h4>
+              </div>
               <p>{comment.content}</p>
             </div>
           )) ?? null

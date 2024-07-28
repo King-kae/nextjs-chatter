@@ -5,7 +5,7 @@ export const AuthorInfo = ({ author, date, status }: { author: any, date: any, s
   if (status === 'preview') {
     return (
       <div className='author__details'>
-        <p className='author__name'>{author?.name}</p>
+        <p className='author__name'>{author?.name || author?.username}</p>
         <p className='author__date'>{date}</p>
       </div>
     );

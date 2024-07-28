@@ -46,7 +46,7 @@ export default function UserId({ params }: { params: { userId: string } }) {
       <Head>
         <title>{user?.userId}</title>
       </Head>
-      <div className="relative">
+      <div className="relative pb-5">
         <div className=" w-full h-40">
           <Image
             alt="Banner"
@@ -56,7 +56,7 @@ export default function UserId({ params }: { params: { userId: string } }) {
             }
             width={1000}
             height={300}
-            className="object-cover w-fullh-48"
+            className="object-cover w-full h-48"
           />
         </div>
         <div className="absolute top-40 left-5">

@@ -1,18 +1,17 @@
+// hooks/useModal.ts
 import { create } from 'zustand';
 
 interface ModalStore {
-    isOpen: boolean;
-    onOpen: () => void;
-    onClose: () => void;
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
 }
 
-const createModalHook = (): (() => ModalStore) => {
-    return create<ModalStore>((set) => ({
-        isOpen: false,
-        onOpen: () => set({ isOpen: true }),
-        onClose: () => set({ isOpen: false }),
-    }));
-};
+const createModalHook = () => create<ModalStore>((set) => ({
+  isOpen: false,
+  onOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));
 
 export const useEditModal = createModalHook();
 export const useRegisterModal = createModalHook();

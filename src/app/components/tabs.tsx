@@ -8,7 +8,7 @@ const TabSwitcher = ({ tabs }: any) => {
     };
 
     return (
-        <div className=''>
+        <div className='px-4'>
             <ul className='flex space-x-4'>
                 {tabs.map((tab: any, index: number) => (
                     <li

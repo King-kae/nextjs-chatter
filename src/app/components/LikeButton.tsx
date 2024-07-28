@@ -1,31 +1,31 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useLike } from '../hook/useLike'; // Update the path according to your project structure
+import { HeartIcon as HeartIconOutline } from '@heroicons/react/24/outline';
+import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
 
 const LikeButton = ({ initialTitle }: { initialTitle: string }) => {
-    const { liked, likeCount, loading, error, toggleLike, setTitle } = useLike(initialTitle);
+  const { liked, likeCount, loading, toggleLike } = useLike(initialTitle);
 
-    const handleLikeClick = () => {
-        toggleLike();
-    };
+  const handleLikeClick = () => {
+    toggleLike();
+  };
 
-    return (
-        <div className='flex'>
-            <button 
-                onClick={handleLikeClick} 
-                disabled={loading}
-                className={`hover:bg-blue ${liked
-                    ? "bg-blue text-red"
-                    : "bg-neutral-200 dark:bg-neutral-700"
-                }  px-3 transition-colors duration-300`}
-            >
-                {liked ? 'Unlike' : 'Like'}
-            </button>
-            <p>{likeCount}</p>
-            {/* {loading && <p>Loading...</p>}
-            {error && <p>Error: {error}</p>} */}
-        </div>
-    );
+  return (
+    <div className="flex items-center space-x-2">
+      <button
+        onClick={handleLikeClick}
+        disabled={loading}
+        className="flex items-center space-x-1 focus:outline-none"
+      >
+        {liked ? (
+          <HeartIconSolid className="h-6 w-6 text-red-500" />
+        ) : (
+          <HeartIconOutline className="h-6 w-6 text-neutral-800" />
+        )}
+      </button>
+      <p className="text-neutral-800 dark:text-black">{likeCount}</p>
+    </div>
+  );
 };
 
 export default LikeButton;
-

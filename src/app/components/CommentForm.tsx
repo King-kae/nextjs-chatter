@@ -18,15 +18,22 @@ const CommentForm: React.FC<CommentFormProps> = ({ postTitle, onCommentPosted })
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
       <textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder="Write a comment"
+        className="w-full p-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black"
       ></textarea>
-      <button type="submit">Post Comment</button>
+      <button
+        type="submit"
+        className="self-end px-4 py-2 bg-black text-white rounded-md hover:bg-white hover:text-black transition-colors duration-200"
+      >
+        Post Comment
+      </button>
     </form>
   );
+  
 };
 
 export default CommentForm;

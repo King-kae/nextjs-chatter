@@ -1,24 +1,33 @@
-import React, { useState } from 'react';
-import { useBookmark } from '../hook/useBookmark'; // Update the path according to your project structure
+import React from 'react';
+import { useBookmark } from '@/app/hook/useBookmark'; // Update the path according to your project structure
+import { BookmarkIcon as BookmarkIconOutline } from '@heroicons/react/24/outline';
+import { BookmarkIcon as BookmarkIconSolid } from '@heroicons/react/24/solid';
 
-const LikeButton = ({ initialTitle }: { initialTitle: string }) => {
-    const { bookmarked, bookmarkCount, loading, error, toggleBookmark, setTitle } = useBookmark(initialTitle);
+const BookmarkButton = ({ initialTitle }: { initialTitle: string }) => {
+  const { bookmarked, bookmarkCount, loading, toggleBookmark } = useBookmark(initialTitle);
 
-    const handleBookmarkClick = () => {
-        toggleBookmark();
-    };
+  const handleBookmarkClick = () => {
+    toggleBookmark();
+  };
 
-    return (
-        <div className='flex'>
-            <button onClick={handleBookmarkClick} disabled={loading}>
-                {bookmarked ? 'Unbookmark' : 'Bookmark'}
-            </button>
-            <p>{bookmarkCount}</p>
-            {/* {loading && <p>Loading...</p>}
-            {error && <p>Error: {error}</p>} */}
-        </div>
-    );
+  return (
+    <div className="flex items-center space-x-2">
+      <button
+        onClick={handleBookmarkClick}
+        disabled={loading}
+        className="flex items-center space-x-1 focus:outline-none"
+      >
+        {bookmarked ? (
+          <BookmarkIconSolid className="h-6 w-6 text-black" />
+        ) : (
+          <BookmarkIconOutline className="h-6 w-6 text-neutral-800" />
+        )}
+      </button>
+      <p className="text-black dark:text-neutral-300">{bookmarkCount}</p>
+    </div>
+  );
 };
 
-export default LikeButton;
+export default BookmarkButton;
+
 
