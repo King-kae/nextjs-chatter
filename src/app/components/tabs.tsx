@@ -13,10 +13,10 @@ const TabSwitcher = ({ tabs }: any) => {
                 {tabs.map((tab: any, index: number) => (
                     <li
                         key={index}
-                        className={`cursor-pointer px-4 py-2 rounded w-full ${
+                        className={`cursor-pointer px-4 py-2 rounded w-full text-center ${
                             index === activeTab
-                                ? 'bg-blue-500 text-white'
-                                : 'bg-white text-gray-700 hover:bg-gray-200'
+                                ? 'text-black border-b-4 border-black'
+                                : 'text-gray-700 hover:bg-gray-200'
                         }`}
                         onClick={() => handleTabClick(index)}
                     >

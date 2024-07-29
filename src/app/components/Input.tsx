@@ -23,7 +23,7 @@ const Input: React.FC<InputProps> = ({
   ...props
 }) => {
   return (
-    <div>
+    <div className="pb-4">
       <label className="relative">
         <input
           value={value != null ? value : ""}

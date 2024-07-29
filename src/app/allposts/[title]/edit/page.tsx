@@ -1,11 +1,9 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-// import { GetServerSideProps } from 'next';
-import Post from '../../../../models/post';
-import { useQuery } from '@tanstack/react-query';
-import connectToMongoDB from '../../../../lib/db';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
+import { marked } from 'marked';
 
 // interface EditPostProps {
 //     post: {
@@ -15,103 +13,18 @@ import Link from 'next/link';
 //     };
 // }
 
-// const EditPostPage = ({params,}: { params: Record<string, string>}) => {
-//     const router = useRouter();
-//     const { title } = params;
-
-// //   const { data, error, isLoading, isError } = useQuery({
-// //     queryKey: ["post", title],
-// //     queryFn: async () =>
-// //       await fetch(`/api/getsinglepost/${title}`).then((res) => res.json()),
-// //   });
-// //   console.log(data);
-// //   const { title, content, imageURL } = data;
-//     // const [newTitle, setNewTitle] = useState(data.title);
-//     // const [content, setContent] = useState(data.content);
-//     // const [imageURL, setImageURL] = useState(data.imageURL);
-
-//     const handleSubmit = async (e: React.FormEvent) => {
-//         e.preventDefault();
-
-//         const response = await fetch(`/api/posts/${data.title}`, {
-//             method: 'PATCH',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify({ newTitle: title, content, imageURL }),
-//         });
-
-//         if (response.ok) {
-//             router.push(`/posts/${title}`);
-//         } else {
-//             console.error('Failed to update post');
-//         }
-//     };
-
-//     return (
-//         // <div>
-//         //     <h1>Edit Post</h1>
-//         //     <form onSubmit={handleSubmit}>
-//         //         <div>
-//         //             <label htmlFor="title">Title:</label>
-//         //             <input
-//         //                 type="text"
-//         //                 id="title"
-//         //                 value={newTitle}
-//         //                 onChange={(e) => setNewTitle(e.target.value)}
-//         //             />
-//         //         </div>
-//         //         <div>
-//         //             <label htmlFor="content">Content:</label>
-//         //             <textarea
-//         //                 id="content"
-//         //                 value={content}
-//         //                 onChange={(e) => setContent(e.target.value)}
-//         //             ></textarea>
-//         //         </div>
-//         //         <div>
-//         //             <label htmlFor="imageURL">Image URL:</label>
-//         //             <input
-//         //                 type="text"
-//         //                 id="imageURL"
-//         //                 value={imageURL}
-//         //                 onChange={(e) => setImageURL(e.target.value)}
-//         //             />
-//         //         </div>
-//         //         <button type="submit">Update Post</button>
-//         //     </form>
-//         // </div>
-//         <div>
-//         <h1>Post Details</h1>
-//         {isLoading && <p>Loading...</p>}
-//         {isError && <p>Error: {String(error)}</p>}
-//         {data && (
-//           <>
-//             <h3>{data.title}</h3>
-//             <p>{data.content}</p>
-//             <p>{data.author.email}</p>
-//             <img
-//               src={data.imageURL}
-//               alt={data.title}
-//               style={{ maxWidth: "100%" }}
-//             />
-//             <p>{title}</p>
-//             {/* <a href=""></a> */}
-//             <Link href={`/edit/${title}`}>Edit Post</Link>
-//           </>
-//         )}
-//         </div>
-//     );
-// };
-
-// export default EditPostPage;
 
 export default function EditPostPage({params,}: { params: Record<string, string>}) {
-
     const router = useRouter();
     const { title } = params;
+
+    const [newTitle, setNewTitle] = useState<string>('');
+    const [content, setContent] = useState<string>('');
+    const [imageURL, setImageURL] = useState<string>('');
+
+
     const getPost = async (title: string) => {
-        const response = await fetch(`/api/getsinglepost/${title}`);
+        const response = await fetch(`/api/post/${title}`);
         const data = await response.json();
         return data;
     };
@@ -122,37 +35,54 @@ export default function EditPostPage({params,}: { params: Record<string, string>
     });
     console.log(data)
     
-    if (isLoading) {
-        return <p>Loading...</p>;
-    }
-    
-    // const [newTitle, setNewTitle] = useState(data.title);
-    // const [content, setContent] = useState(data.content);
-        const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+
+    useEffect(() => {
+        if (data) {
+          setNewTitle(data.title);
+          setContent(data.content);
+          setImageURL(data.imageURL);
+        }
+      }, [data]
+    );
+
+    const updatePost = async () => {
+        if (!data) return;
 
         const response = await fetch(`/api/posts/${data.title}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ newTitle: title, content, imageURL }),
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ newTitle, content, imageURL }),
         });
-
-        if (response.ok) {
-            router.push(`/posts/${title}`);
-        } else {
-            console.error('Failed to update post');
+    
+        if (!response.ok) {
+          throw new Error('Failed to update post');
         }
-    };
-
+        return response.json();
+      };
+    
+      const mutation = useMutation({
+        mutationFn: updatePost, 
+        onSuccess: () => {
+          router.push(`/allposts/${newTitle}`);
+        },
+      });
+    
+      const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        mutation.mutate();
+      };
+    
+      if (isLoading) return <p>Loading...</p>;
+      if (error) return <p>Error: {error.message}</p>;
     
     return (
         <>
             <h1>Here</h1>
             <div>
                 <h1>Edit Post</h1>
-                <form>
+                <form onSubmit={handleSubmit}>
                     <div>
                         <label htmlFor="title">Title:</label>
                         <input

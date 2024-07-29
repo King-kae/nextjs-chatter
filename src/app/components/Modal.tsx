@@ -68,7 +68,7 @@ export default function Modal({
           <div className="relative px-10 pt-7 flex-auto">{body}</div>
           <div className="flex flex-col gap-2 px-10 pt-7 pb-7">
             <button
-              className="text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed p-2 rounded"
+              className="text-white bg-black hover:bg-white hover:text-black disabled:opacity-50 disabled:cursor-not-allowed p-2 rounded"
               onClick={handleSend}
               disabled={disabled}
             >

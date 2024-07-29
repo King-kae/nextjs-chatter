@@ -117,17 +117,18 @@ export async function PATCH(
 
     const newTitle = formData.get("title") as string;
     const newContent = formData.get("content") as string;
+    const imageURL = formData.get("imageURL") as string;
 
-    if (!newTitle || !newContent) {
+    if (!newTitle || !newContent || !imageURL) {
       return NextResponse.json(
-        { message: "Title or content is missing" },
+        { message: "Title or Content or ImageURL is missing" },
         { status: 400 }
       );
     }
 
     const updatedPost = await Post.findOneAndUpdate(
       { title, author: user._id },
-      { title: newTitle, content: newContent },
+      { title: newTitle, content: newContent, imageURL },
       { new: true }
     );
 
