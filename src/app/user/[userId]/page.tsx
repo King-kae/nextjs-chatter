@@ -6,9 +6,7 @@ import Head from "next/head";
 import UserBio from "../../components/User/UserBio";
 import Avatar from "../../components/Avatar";
 import Image from "next/image";
-import { useQuery } from "@tanstack/react-query"; // Import the useQuery function from the react-query library
-// import PostFeed from "@/components/shared/PostFeed";
-// import usePosts from "@/hooks/usePosts";
+import { useQuery } from "@tanstack/react-query"; 
 import TabSwitcher from "../../components/tabs";
 import { fetchUserPosts } from "@/lib/fetchPost";
 import PostList from "@/app/components/PostList/PostList";
@@ -28,11 +26,7 @@ export default function UserId({ params }: { params: { userId: string } }) {
   });
 
   const { data: user } = useUsers(userId as string);
-//   const { data: posts = [] } = usePosts();
 
-//   const post = posts.filter(
-//     (post: Record<string, any>) => post.userId === userId
-//   );
 
   const tabs = [
     { label: "Posts", content: <PostList items={posts} /> },

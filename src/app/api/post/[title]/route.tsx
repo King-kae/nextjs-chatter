@@ -80,10 +80,11 @@ export async function DELETE(
 }
 
 
-export async function PATCH(
+export async function PUT(
   req: NextRequest,
   { params }: { params: { title: string } }
 ) {
+  // console.log("PUT request");
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -104,7 +105,7 @@ export async function PATCH(
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
-    const post = await Post.findOne({ title, author: user._id });
+    const post = await Post.findOne({ title });
 
     if (!post) {
       return NextResponse.json(
@@ -113,26 +114,25 @@ export async function PATCH(
       );
     }
 
-    const formData = await req.formData();
-
-    const newTitle = formData.get("title") as string;
-    const newContent = formData.get("content") as string;
-    const imageURL = formData.get("imageURL") as string;
-
-    if (!newTitle || !newContent || !imageURL) {
+    if (post.author.toString() !== user._id.toString()) {
       return NextResponse.json(
-        { message: "Title or Content or ImageURL is missing" },
-        { status: 400 }
+        { message: "Unauthorized to update post" },
+        { status: 401 }
       );
     }
+    const formData = await req.formData();
+    
+    const newTitle = formData.get("title") as string;
+    const markdown = formData.get("content") as string;
+    const file = formData.get("image") as string;
 
-    const updatedPost = await Post.findOneAndUpdate(
-      { title, author: user._id },
-      { title: newTitle, content: newContent, imageURL },
-      { new: true }
-    );
+    post.title = newTitle;
+    post.content = markdown;
+    post.imageURL = file;
+    await post.save();
 
-    return NextResponse.json(updatedPost);
+    return NextResponse.json(post);
+    
   } catch (error) {
     return NextResponse.json(
       { message: "Error updating post", error },
@@ -141,4 +141,4 @@ export async function PATCH(
   }
 }
 
-export default { GET, DELETE, PATCH };
+export default { GET, DELETE, PUT };

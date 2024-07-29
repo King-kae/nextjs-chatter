@@ -3,7 +3,6 @@ import React, { useState, useRef } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { marked } from "marked";
-import Image from "next/image";
 import {
   BoldIcon,
   UnderlineIcon,
