@@ -36,6 +36,8 @@ const userSchema = new Schema({
   followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   followedTags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
   bookmarks: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
+  resetToken: { type: String },
+  resetTokenExpires: { type: Date },
 
 }, {timestamps: true});
 

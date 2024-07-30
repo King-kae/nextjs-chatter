@@ -1,6 +1,3 @@
-
-
-
 "use client";
 
 import React, { FormEvent, useState } from "react";
@@ -58,9 +55,12 @@ function LoginPage() {
           name="password"
           className="bg-zinc-800 px-4 py-2 block mb-2 w-full"
         />
+        <div className="text-right text-gray-500 mb-4">
+          <a href="/forgot-password">Forgot password?</a>
+        </div>
 
         <button disabled={loginInProgress} className="bg-indigo-500 px-4 py-2" type="submit">
-          Login
+          {loginInProgress ? "Logging in..." : "Login"}
         </button>
         <div className="my-4 text-center text-gray-500">
           or login with provider
