@@ -115,6 +115,8 @@ export default function PostPage({ params }: PostPageProps) {
         src={post.imageURL}
         alt={post.title}
         className="w-full h-auto max-h-96 object-cover mb-8 rounded-md shadow-md"
+        width={800}
+        height={400}
       />
       <div className="flex items-center gap-x-4 p-4 bg-white shadow rounded-md">
         <Avatar seed={currentUser._id} size="small" />

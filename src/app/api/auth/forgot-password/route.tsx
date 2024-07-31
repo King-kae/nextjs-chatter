@@ -32,6 +32,7 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
         // Save the reset token in the database
         user.resetToken = resetToken;
         user.resetTokenExpires = expiration;
+        await user.save()
 
       // Send reset email
       const resetLink = `${process.env.NEXTAUTH_URL}/reset-password?token=${resetToken}`;

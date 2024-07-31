@@ -31,6 +31,7 @@ export default function CreatePost() {
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
+      setFile(e.target.files[0]);
       const file = e.target.files[0];
       try {
         setLoading(true);
@@ -118,7 +119,10 @@ export default function CreatePost() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    console.log(file)
+    console.log(title)
+    console.log(markdown)
+    
     if (!file || !title || !markdown) {
       setMessage("Please fill in all fields and select a file.");
       return;
@@ -128,6 +132,7 @@ export default function CreatePost() {
     formData.append("image", file);
     formData.append("title", title);
     formData.append("content", markdown);
+
 
     try {
       const response = await axios.post("/api/post", formData, {
@@ -144,7 +149,7 @@ export default function CreatePost() {
     }
   };
 
-  console.log(process.env.NEXTAUTH_URL)
+  // console.log(process.env.NEXTAUTH_URL)
   return (
     <div
       style={{
@@ -187,6 +192,8 @@ export default function CreatePost() {
                   <Image
                     src={previewUrl}
                     alt="Preview"
+                    width={300}
+                    height={200}
                     className="w-full h-full object-cover rounded-md"
                   />
                 ) : (
@@ -227,6 +234,7 @@ export default function CreatePost() {
           <label htmlFor="title">Title:</label>
           <input
             type="text"
+            name="title"
             id="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -297,7 +305,7 @@ export default function CreatePost() {
           </div>
           <textarea
             ref={textareaRef}
-            id="markdown"
+            id="content"
             value={markdown}
             onChange={(e) => setMarkdown(e.target.value)}
             style={{

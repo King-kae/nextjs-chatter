@@ -18,7 +18,7 @@ const ResetPasswordPage = () => {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
-  console.log(token);
+  // console.log(token);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -36,11 +36,15 @@ const ResetPasswordPage = () => {
         token,
         password,
       });
-      setMessage(response.data.message);
-      router.push('/login');
+    
+      setTimeout(() => {
+        setMessage(response.data.message);
+        setLoading(false);
+        router.push('/login');
+      }, 8000);
+    
     } catch (err) {
       setError("Failed to reset password. Please try again.");
-    } finally {
       setLoading(false);
     }
   };

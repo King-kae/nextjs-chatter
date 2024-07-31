@@ -10,6 +10,8 @@ export const useLike = (initialTitle: any) => {
   const [error, setError] = useState<string | null>(null);
   const [title, setTitle] = useState(initialTitle);
 
+  const toast = useToast();
+
   useEffect(() => {
     if (!title) {
       setError("Title is required");
@@ -65,6 +67,7 @@ export const useLike = (initialTitle: any) => {
       });
 
       const data = await response.json();
+      toast.success("Liked successfully");
       console.log(data.likes.length);
       if (!response.ok) {
         throw new Error(data.error || "Something went wrong");

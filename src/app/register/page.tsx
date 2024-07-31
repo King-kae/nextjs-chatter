@@ -10,11 +10,11 @@ import GitHubButton from "@/app/components/common/GithubButton";
 import Link from "next/link";
 import Joi from "joi";
 
-function RegisterPage() {
+const RegisterPage: React.FC = () => {
   const [error, setError] = useState<string | undefined>(undefined);
-  const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [loading, setLoading] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
   const router = useRouter();
 
   // Define the Joi schema for form validation
@@ -89,62 +89,80 @@ function RegisterPage() {
   };
 
   return (
-    <div className="justify-center h-[calc(100vh-4rem)] flex items-center">
-      <form onSubmit={handleSubmit} className="bg-neutral-950 px-8 py-10 w-3/12">
-        {error && <div className="bg-red-500 text-white px-4 py-2">{error}</div>}
+    <div className="flex justify-center items-center min-h-screen bg-white">
+      <form onSubmit={handleSubmit} className="bg-white p-8 md:p-10 rounded-lg w-full max-w-md space-y-6 border border-gray-300">
+        {error && <div className="bg-red-500 text-white px-4 py-2 rounded">{error}</div>}
 
-        <h1 className="text-4xl font-bold mb-7">Signup</h1>
+        <h1 className="text-3xl md:text-4xl font-bold text-center text-black">Sign Up</h1>
 
-        <input
-          type="text"
-          placeholder="John Doe"
-          name="username"
-          className="bg-zinc-800 px-4 py-2 block mb-2 w-full"
-        />
-        <input
-          type="email"
-          placeholder="somemail@gmail.com"
-          name="email"
-          className="bg-zinc-800 px-4 py-2 block mb-2 w-full"
-        />
-        <input
-          type={showPassword ? "text" : "password" }
-          placeholder="******"
-          name="password"
-          className="bg-zinc-800 px-4 py-2 block mb-2 w-full"
-        />
-        <button  
-          type="button"
-          className="absolute right-4 top-4"
-          onClick={() => setShowPassword(!showPassword)}
-        >
-          {showPassword ? <EyeIcon /> : <EyeSlashIcon />}
-        </button>
-        <input
-          type={showConfirmPassword ? "text" : "password" }
-          placeholder="******"
-          name="confirm-password"
-          className="bg-zinc-800 px-4 py-2 block mb-2 w-full"
-        />
-        <button  
-          type="button"
-          className="absolute right-4 top-4"
-          onClick={() => setShowConfirmPassword(!showPassword)}
-        >
-          {showConfirmPassword ? <EyeIcon /> : <EyeSlashIcon />}
-        </button>
+        <div className="space-y-4">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="John Doe"
+              name="username"
+              className="bg-gray-200 text-black px-4 py-2 rounded w-full focus:outline-none focus:ring focus:ring-gray-500"
+            />
+          </div>
 
-        <button className="bg-indigo-500 px-4 py-2" type="submit" disabled={loading}>
-          {loading ? "Signing up..." : "Signup"}
-        </button>
-        <div className="my-4 text-center text-gray-500">
-          or login with provider
+          <div className="relative">
+            <input
+              type="email"
+              placeholder="somemail@gmail.com"
+              name="email"
+              className="bg-gray-200 text-black px-4 py-2 rounded w-full focus:outline-none focus:ring focus:ring-gray-500"
+            />
+          </div>
+
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="******"
+              name="password"
+              className="bg-gray-200 text-black px-4 py-2 rounded w-full focus:outline-none focus:ring focus:ring-gray-500"
+            />
+            <button
+              type="button"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+            </button>
+          </div>
+
+          <div className="relative">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              placeholder="******"
+              name="confirm-password"
+              className="bg-gray-200 text-black px-4 py-2 rounded w-full focus:outline-none focus:ring focus:ring-gray-500"
+            />
+            <button
+              type="button"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
+              {showConfirmPassword ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+            </button>
+          </div>
         </div>
-        <GoogleButton />
-        <GitHubButton />
-        <div className="text-center my-4 text-gray-500 border-t pt-4">
-          Existing account?{' '}
-          <Link className="underline" href={'/login'}>Login here &raquo;</Link>
+
+        <button className="bg-black text-white px-4 py-2 rounded w-full hover:bg-gray-700 transition duration-200" type="submit" disabled={loading}>
+          {loading ? "Signing up..." : "Sign Up"}
+        </button>
+
+        <div className="my-4 text-center text-gray-500">
+          or sign up with
+        </div>
+
+        <div className="flex flex-col space-y-2">
+          <GoogleButton />
+          <GitHubButton />
+        </div>
+
+        <div className="text-center text-gray-500 border-t pt-4">
+          Already have an account?{' '}
+          <Link className="text-black hover:underline" href={'/login'}>Login here &raquo;</Link>
         </div>
       </form>
     </div>
