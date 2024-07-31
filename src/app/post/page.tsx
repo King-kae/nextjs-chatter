@@ -144,6 +144,7 @@ export default function CreatePost() {
     }
   };
 
+  console.log(process.env.NEXTAUTH_URL)
   return (
     <div
       style={{
