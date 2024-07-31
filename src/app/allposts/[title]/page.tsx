@@ -12,6 +12,7 @@ import BookmarkButton from "@/app/components/BookmarkButton";
 import { marked } from "marked";
 import useCurrentUser from "@/app/hook/useCurrentUser";
 import { AuthorInfo } from "@/app/components/AuthorInfo/AuthorInfo";
+import Image from "next/image";
 
 interface PostPageProps {
   params: { title: string };
@@ -110,7 +111,7 @@ export default function PostPage({ params }: PostPageProps) {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <img
+      <Image
         src={post.imageURL}
         alt={post.title}
         className="w-full h-auto max-h-96 object-cover mb-8 rounded-md shadow-md"

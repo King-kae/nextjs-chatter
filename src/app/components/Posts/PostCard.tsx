@@ -49,9 +49,9 @@ console.log(userId)
           }
         </div>
         <div className="px-8">
-          <a href={`/allposts/${title}`} className="title-link">
+          <Link href={`/allposts/${title}`} className="title-link">
             <h2>{title}</h2>
-          </a>
+          </Link>
             <div className="flex pb-4">
               <CommentButton comments={comments} initialTitle={title} />
               <LikeButton initialTitle={title} />

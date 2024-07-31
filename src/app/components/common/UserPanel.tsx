@@ -3,7 +3,7 @@
 import React from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-// import avatar from '';
+import Image from "next/image";
 
 function UserPanel() {
   const { data: session, status } = useSession();
@@ -16,7 +16,7 @@ function UserPanel() {
         <div>
           <h1 className="text-black">{session.user?.name}</h1>
           <h2 className="text-black">{session.user?.email}</h2>
-          <img src={session.user?.image || "../../../../public/default.png"} alt="profile picture" />
+          <Image src={session.user?.image || "../../../../public/default.png"} alt="profile picture" />
           {/* <button onClick={() => router.push("/dashboard/profile")}>Profile</button> */}
         </div>
       ) : (

@@ -3,7 +3,8 @@ import User from "../../../models/user";
 import { getServerSession } from "next-auth";
 import connectToMongoDB from "../../../lib/db";
 import { NextRequest, NextResponse } from "next/server";
-import { authOptions } from "../auth/[...nextauth]/route";
+// import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from '@/utils/authOptions';
 import { NextApiRequest, NextApiResponse } from "next";
 import { Readable } from "stream";
 

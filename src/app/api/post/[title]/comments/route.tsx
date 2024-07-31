@@ -2,7 +2,8 @@ import Comment from "../../../../../models/comment"
 import connectToMongoDB from "../../../../../lib/db"
 import { getServerSession } from "next-auth";
 // import POST from "../CreatePost/route";
-import { authOptions } from "../../../auth/[...nextauth]/route";
+// import { authOptions } from "../../../auth/[...nextauth]/route";
+import { authOptions } from '@/utils/authOptions';
 import { NextRequest, NextResponse } from "next/server";
 import Post from "../../../../../models/post";
 import User from "../../../../../models/user";

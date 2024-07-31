@@ -2,7 +2,8 @@ import Post from "../../../../models/post";
 import connectToMongoDB from "../../../../lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../auth/[...nextauth]/route";
+// import { authOptions } from "../../auth/[...nextauth]/route";
+import { authOptions } from '@/utils/authOptions';
 import User from "@/models/user";
 
 // GET /posts/:title
@@ -141,4 +142,4 @@ export async function PUT(
   }
 }
 
-export default { GET, DELETE, PUT };
+// export default { GET, DELETE, PUT };

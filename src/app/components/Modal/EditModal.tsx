@@ -7,6 +7,7 @@ import useUsers from "../../hook/useUsers";
 import { useEditModal } from "@/app/hook/useModal";
 import Modal from "../Modal";
 import Input from "../Input";
+import Image from "next/image";
 
 const EditModal: React.FC = () => {
   const { data: currentUser } = useCurrentUser();
@@ -105,18 +106,7 @@ const EditModal: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [
-    username,
-    bio,
-    work,
-    skills,
-    profileImage,
-    coverImage,
-    location,
-    mutateFetchUser,
-    editModal,
-    toast,
-  ]);
+  }, [username, bio, profileImage, coverImage, location, mutateFetchUser, editModal, toast]);
 
   console.log(coverImage);
   return (
@@ -138,10 +128,11 @@ const EditModal: React.FC = () => {
               onClick={() => coverInputRef.current?.click()}
             >
               {coverImage && (
-                <img
-                  src={typeof coverImage === "string" ? coverImage : undefined}
-                  alt="Cover"
-                  className="w-full h-full object-cover"
+                <Image src={
+                  typeof coverImage === "string"
+                  ? coverImage
+                  : ""
+                } alt="Cover" className="w-full h-full object-cover" 
                 />
               )}
               <input
@@ -168,14 +159,11 @@ const EditModal: React.FC = () => {
               onClick={() => profileInputRef.current?.click()}
             >
               {profileImage && (
-                <img
-                  src={
+                <Image src={
                     typeof profileImage === "string"
-                      ? profileImage
-                      : URL.createObjectURL(profileImage)
-                  }
-                  alt="Profile"
-                  className="w-full h-full object-cover"
+                    ? profileImage
+                    : ""
+                  } alt="Profile" className="w-full h-full object-cover" 
                 />
               )}
               <input

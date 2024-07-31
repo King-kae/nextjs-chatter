@@ -12,10 +12,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({
   children,
-  modal,
 }: Readonly<{
   children: React.ReactNode;
-  modal?: React.ReactNode;
 }>) {
   return (
     <SessionProvider>
@@ -25,7 +23,7 @@ export default function RootLayout({
           <meta name="description" content="A Chattable App" />
         </head>
         <Providers>
-          <body className={inter.className}>{modal}{children}</body>
+          <body className={inter.className}>{children}</body>
         </Providers>
       </html>
     </SessionProvider>

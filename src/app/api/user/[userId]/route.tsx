@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import connectToDB from '../../../../lib/db'
 import User from '../../../../models/user'; // Adjust the path to your User model
-import {authOptions} from '../../auth/[...nextauth]/route'
+// import {authOptions} from '../../auth/[...nextauth]/route'
 
 export async function GET(request: any, { params }: { params: { userId: string } }) {
     const { req, res } = request;

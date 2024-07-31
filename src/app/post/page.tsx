@@ -16,6 +16,7 @@ import {
   H1Icon,
   CodeBracketSquareIcon,
 } from "@heroicons/react/24/outline";
+import Image from "next/image";
 
 export default function CreatePost() {
   const [file, setFile] = useState<File | null>(null);
@@ -182,7 +183,7 @@ export default function CreatePost() {
                     </svg>
                   </div>
                 ) : previewUrl ? (
-                  <img
+                  <Image
                     src={previewUrl}
                     alt="Preview"
                     className="w-full h-full object-cover rounded-md"

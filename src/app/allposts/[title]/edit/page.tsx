@@ -18,6 +18,7 @@ import {
   CodeBracketSquareIcon,
 } from "@heroicons/react/24/outline";
 import axios from "axios";
+import Image from "next/image";
 
 // interface EditPostProps {
 //     post: {
@@ -208,8 +209,8 @@ export default function EditPostPage({
             <div onClick={() => fileInputRef.current?.click()} className="p-6">
               <div className="flex flex-col items-center justify-center w-full h-64 bg-muted rounded-md border-2 border-dashed border-muted-foreground/50 cursor-pointer transition-colors hover:bg-muted/50 relative">
               {file && (
-                <img
-                  src={typeof file === "string" ? file : undefined}
+                <Image
+                  src={typeof file === "string" ? file : ''}
                   alt="Cover Image"
                   className="w-full h-full object-cover rounded-md"
                 />

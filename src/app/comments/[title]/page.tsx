@@ -26,7 +26,7 @@ const CommentsPage = ({ params }: PostPageProps) => {
         if (!response.ok) throw new Error('Failed to fetch');
         const data = await response.json();
         setComments(data);
-      } catch (err) {
+      } catch (err: any) {
         setError(err.message);
       } finally {
         setLoading(false);

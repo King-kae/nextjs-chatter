@@ -76,14 +76,7 @@ const useFollow = (userId: string) => {
         } catch (error) {
             toast.error('Something went wrong');
         }
-    }, [
-        currentUser,
-        isFollowing,
-        userId,
-        mutateCurrentUser,
-        mutateFetchedUser,
-        toast,
-    ]);
+    }, [currentUser, router, isFollowing, mutateCurrentUser, mutateFetchedUser, toast, userId]);
 
     return {
         isFollowing,
