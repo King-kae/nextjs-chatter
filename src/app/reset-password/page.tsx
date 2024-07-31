@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline"; // Icons for visibility toggle
+
 
 const ResetPasswordPage = () => {
   const [password, setPassword] = useState("");
@@ -16,6 +17,8 @@ const ResetPasswordPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
+
+  console.log(token);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -97,4 +100,10 @@ const ResetPasswordPage = () => {
   );
 };
 
-export default ResetPasswordPage;
+const ResetPasswordPageWrapper = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <ResetPasswordPage />
+  </Suspense>
+);
+
+export default ResetPasswordPageWrapper;
