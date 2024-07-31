@@ -38,7 +38,7 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
       await sendEmail({
         to: email,
         subject: 'Password Reset Request',
-        text: `To reset your password, click the following link: ${resetLink}`,
+        text: `To reset your password, click the following link: <a href= "${resetLink}">Link</a>`,
       });
 
       return NextResponse.json({ message: 'Reset link sent to your email address.' });

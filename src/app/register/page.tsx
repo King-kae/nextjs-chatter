@@ -4,6 +4,7 @@ import axios, { AxiosError } from "axios";
 import React, { FormEvent, useState } from "react";
 import { signIn } from 'next-auth/react';
 import { useRouter } from "next/navigation";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 import GoogleButton from "@/app/components/common/GoogleButton";
 import GitHubButton from "@/app/components/common/GithubButton";
 import Link from "next/link";
@@ -12,6 +13,8 @@ import Joi from "joi";
 function RegisterPage() {
   const [error, setError] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const router = useRouter();
 
   // Define the Joi schema for form validation
@@ -105,17 +108,31 @@ function RegisterPage() {
           className="bg-zinc-800 px-4 py-2 block mb-2 w-full"
         />
         <input
-          type="password"
+          type={showPassword ? "text" : "password" }
           placeholder="******"
           name="password"
           className="bg-zinc-800 px-4 py-2 block mb-2 w-full"
         />
+        <button  
+          type="button"
+          className="absolute right-4 top-4"
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          {showPassword ? <EyeIcon /> : <EyeSlashIcon />}
+        </button>
         <input
-          type="password"
+          type={showConfirmPassword ? "text" : "password" }
           placeholder="******"
           name="confirm-password"
           className="bg-zinc-800 px-4 py-2 block mb-2 w-full"
         />
+        <button  
+          type="button"
+          className="absolute right-4 top-4"
+          onClick={() => setShowConfirmPassword(!showPassword)}
+        >
+          {showConfirmPassword ? <EyeIcon /> : <EyeSlashIcon />}
+        </button>
 
         <button className="bg-indigo-500 px-4 py-2" type="submit" disabled={loading}>
           {loading ? "Signing up..." : "Signup"}

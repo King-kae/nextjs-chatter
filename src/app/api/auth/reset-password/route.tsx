@@ -1,41 +1,51 @@
 // pages/api/auth/reset-password.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import connectToMongoDB  from '@/lib/db';
 import { ObjectId } from 'mongodb';
+import User from '@/models/user';
+import { NextRequest, NextResponse } from 'next/server';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'POST') {
-    const { token, password } = req.body;
+export  async function POST(req: NextRequest, res: NextApiResponse) {
+  
+    const { token, password } = await req.json();
+    // const { token } = data;
+    console.log("token:", token);
+
+    if (!token) {
+        return NextResponse.json({ message: 'Token is required.' });
+    }
 
     try {
-      const { client } = await connectToMongoDB();
-      const user = await User.findOne({ resetToken: { token } });
-      const resetToken = await db.collection('resetTokens').findOne({ token });
+        // const formData = await req.formData();
 
-      if (!resetToken) {
-        return res.status(400).json({ message: 'Invalid or expired reset token.' });
+
+        // Extract fields directly from formData
+        // const newPassword = formData.get('password') as string;
+      // Find the user by the reset token and check if the token is still valid
+      const user = await User.findOne({
+        resetToken: token,
+        resetTokenExpires: { $gt: new Date() },
+      });
+      console.log(user)
+
+      if (!user) {
+        return NextResponse.json({ message: 'Invalid or expired token.' });
       }
 
-      if (new Date() > resetToken.expiresAt) {
-        return res.status(400).json({ message: 'Reset token has expired.' });
-      }
+      // Hash the new password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
 
-      const hashedPassword = await bcrypt.hash(password, 10);
+      // Update the user's password and clear the reset token and expiration
+      user.password = hashedPassword;
+      user.resetToken = undefined;
+      user.resetTokenExpires = undefined;
 
-      await db.collection('users').updateOne(
-        { _id: new ObjectId(resetToken.userId) },
-        { $set: { password: hashedPassword } }
-      );
-
-      await db.collection('resetTokens').deleteOne({ _id: resetToken._id });
-
-      res.status(200).json({ message: 'Password has been reset successfully.' });
+      await user.save();
+      return NextResponse.json({ message: 'Password has been reset successfully.' });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Something went wrong.' });
+      return NextResponse.json({ message: 'Something went wrong.' });
     }
-  } else {
-    res.status(405).json({ message: 'Method not allowed.' });
-  }
 }
