@@ -114,7 +114,7 @@ export default function PostPage({ params }: PostPageProps) {
       <Image
         src={post.imageURL}
         alt={post.title}
-        className="w-full h-auto max-h-96 object-cover mb-8 rounded-md shadow-md"
+        className="w-full h-auto object-cover mb-8 rounded-md shadow-md"
         width={800}
         height={400}
       />

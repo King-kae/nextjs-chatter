@@ -2,7 +2,6 @@ import axios from "axios";
 import { useState, useEffect, useCallback } from "react";
 import { useToast } from "./useToast"; // Assuming you have a toast hook for notifications
 
-
 export const useLike = (initialTitle: any) => {
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
@@ -72,7 +71,6 @@ export const useLike = (initialTitle: any) => {
       if (!response.ok) {
         throw new Error(data.error || "Something went wrong");
       }
-
 
       setLiked((prevLiked) => !prevLiked);
       setLikeCount(data.likes.length);

@@ -1,13 +1,13 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import useUsers from "../../hook/useUsers";
+import useUsers from "@/app/hook/useUsers";
 import Head from "next/head";
 import UserBio from "../../components/User/UserBio";
-import Avatar from "../../components/Avatar";
+import Avatar from "@/app/components/Avatar";
 import Image from "next/image";
-import { useQuery } from "@tanstack/react-query"; 
-import TabSwitcher from "../../components/tabs";
+import { useQuery } from "@tanstack/react-query";
+import TabSwitcher from "@/app/components/tabs";
 import { fetchUserPosts } from "@/lib/fetchPost";
 import PostList from "@/app/components/PostList/PostList";
 
@@ -27,13 +27,12 @@ export default function UserId({ params }: { params: { userId: string } }) {
 
   const { data: user } = useUsers(userId as string);
 
-
   const tabs = [
     { label: "Posts", content: <PostList items={posts} /> },
     { label: "About", content: <div>Content for Tab 2</div> },
     { label: "Replies", content: <div>Content for Tab 3</div> },
   ];
-    console.log(user)
+  console.log(user);
 
   return (
     <>

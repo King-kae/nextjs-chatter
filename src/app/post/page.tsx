@@ -15,6 +15,8 @@ import {
   CodeBracketIcon,
   H1Icon,
   CodeBracketSquareIcon,
+  MinusIcon,
+  TableCellsIcon,
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 
@@ -86,6 +88,11 @@ export default function CreatePost() {
   const handleCodeBlock = () => insertMarkdownSyntax("```\n", "\n```");
   const handleHeading = () => insertMarkdownSyntax("# ");
   const handleLink = () => insertMarkdownSyntax("[Link description](url)");
+  const handleHorizontalRule = () => insertMarkdownSyntax("\n---\n");
+  const handleTable = () =>
+    insertMarkdownSyntax(
+      "| Header1 | Header2 |\n| --- | --- |\n| Row1 | Row2 |"
+    );
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -119,10 +126,10 @@ export default function CreatePost() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(file)
-    console.log(title)
-    console.log(markdown)
-    
+    console.log(file);
+    console.log(title);
+    console.log(markdown);
+
     if (!file || !title || !markdown) {
       setMessage("Please fill in all fields and select a file.");
       return;
@@ -132,7 +139,6 @@ export default function CreatePost() {
     formData.append("image", file);
     formData.append("title", title);
     formData.append("content", markdown);
-
 
     try {
       const response = await axios.post("/api/post", formData, {
@@ -215,7 +221,7 @@ export default function CreatePost() {
                       <line x1="12" x2="12" y1="3" y2="15"></line>
                     </svg>
                     <p className="mt-4 text-sm text-muted-foreground">
-                      Drag and drop your picture or click to select a file
+                      Drag and drop your cover picture or click to select a file
                     </p>
                   </>
                 )}
@@ -301,6 +307,16 @@ export default function CreatePost() {
             </button>
             <button title="Add Image" type="button" onClick={handleImage}>
               <PhotoIcon className="h-6 w-6" />
+            </button>
+            <button
+              title="Horizontal Rule"
+              type="button"
+              onClick={handleHorizontalRule}
+            >
+              <MinusIcon className="h-6 w-6" />
+            </button>
+            <button title="Table" type="button" onClick={handleTable}>
+              <TableCellsIcon className="h-6 w-6" />
             </button>
           </div>
           <textarea
