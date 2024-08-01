@@ -185,14 +185,15 @@ export async function PUT(req: NextRequest) {
         }
 
         // Update user data
-        const { username, bio, location, work, skills, links, coverImage } = await req.json();
+        const { profileImage, username, bio, location, work, skills, links, coverImage } = await req.json();
+        user.avatar = profileImage || user.profileImage;
         user.username = username || user.username;
         user.bio = bio || user.bio;
         user.location = location || user.location;
         user.work = work || user.work;
         user.skills = skills || user.skills;
         user.links = links || user.links;
-        user.coverImage = coverImage || user.coverImage;
+        user.coverphoto = coverImage || user.coverImage;
 
         await user.save();
 

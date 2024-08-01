@@ -96,6 +96,8 @@ const EditModal: React.FC = () => {
         profileImage,
         coverImage,
         location,
+        work,
+        skills,
       });
 
       mutateFetchUser();
@@ -106,7 +108,7 @@ const EditModal: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [username, bio, profileImage, coverImage, location, mutateFetchUser, editModal, toast]);
+  }, [username, bio, profileImage, coverImage, location, work, skills, mutateFetchUser, editModal, toast]);
 
   console.log(coverImage);
   return (
@@ -132,7 +134,7 @@ const EditModal: React.FC = () => {
                   typeof coverImage === "string"
                   ? coverImage
                   : ""
-                } alt="Cover" className="w-full h-full object-cover" 
+                } alt="Cover" className="w-full h-full object-cover"  width={100} height={100}
                 />
               )}
               <input
@@ -163,7 +165,7 @@ const EditModal: React.FC = () => {
                     typeof profileImage === "string"
                     ? profileImage
                     : ""
-                  } alt="Profile" className="w-full h-full object-cover" 
+                  } alt="Profile" className="w-full h-full object-cover"  width={100} height={100}
                 />
               )}
               <input
@@ -200,6 +202,20 @@ const EditModal: React.FC = () => {
             label="Location"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
+          />
+          <label className="text-sm font-medium text-gray-700">Work</label>
+           <Input
+            disabled={isLoading}
+            label="Work"
+            value={work}
+            onChange={(e) => setWork(e.target.value)}
+          />
+          <label className="text-sm font-medium text-gray-700">Skills</label>
+           <Input
+            disabled={isLoading}
+            label="Skills"
+            value={skills}
+            onChange={(e) => setSkills(e.target.value)}
           />
         </div>
       }
