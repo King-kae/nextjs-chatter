@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState } from "react";
@@ -16,26 +17,44 @@ const getAllPosts = async () => {
 };
 
 export default function ShowAllPosts() {
-  const { isPending, isError, data, error } = useQuery<any[]>({
+  const { isLoading, isError, data, error } = useQuery<any[]>({
     queryKey: ["posts"],
     queryFn: getAllPosts,
   });
-  console.log(data);
-  if (isPending)
+
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Filter posts based on the search query
+  const filteredPosts = data?.filter((post) =>
+    post.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  if (isLoading)
     return (
       <div className="flex justify-center items-center h-screen">
-        {" "}
         Loading...
       </div>
     );
-  if (isError) return <div> Error: {error.message}</div>;
-  if (!data) return <div> No data</div>;
+
+  if (isError) return <div>Error: {error.message}</div>;
+  if (!data) return <div>No data</div>;
 
   return (
     <>
-      {!data.length && <div> No data</div>}
-      <div className="flex justify-center items-center h-full">
-        <PostList items={data} />
+      <div className="flex justify-center items-center flex-col p-4">
+        <input
+          type="text"
+          placeholder="Search posts by title"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="mb-4 p-2 border border-gray-300 rounded"
+          style={{ width: "100%", maxWidth: "600px" }}
+        />
+        {!filteredPosts?.length ? (
+          <div>No posts match your search.</div>
+        ) : (
+          <PostList items={filteredPosts} />
+        )}
       </div>
     </>
   );
