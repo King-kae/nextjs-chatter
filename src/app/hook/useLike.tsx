@@ -80,7 +80,7 @@ export const useLike = (initialTitle: any) => {
     } finally {
       setLoading(false);
     }
-  }, [title]);
+  }, [title, toast]);
 
   return { liked, likeCount, loading, error, toggleLike, setTitle };
 };
