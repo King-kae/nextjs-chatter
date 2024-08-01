@@ -15,6 +15,7 @@ export default function UserBio({ params }: { params: { userId: string } }) {
   const { data: user } = useUsers(userId);
   const editModal = useEditModal();
   const { isFollowing, toggleFollow } = useFollow(user?._id || "");
+  console.log(user);
 
   return (
     <div className="">
@@ -52,7 +53,7 @@ export default function UserBio({ params }: { params: { userId: string } }) {
               </div>
               <div className="flex flex-row items-center space-x-4 mt-2">
                 <p>
-                  Following {" "} <span className="font-bold">{user?.followingIds?.length || 0}</span>
+                  Following {" "} <span className="font-bold">{user?.following?.length || 0}</span>
                 </p>
                 <p>
                   Followers {" "} <span className="font-bold">{user?.followerCount || 0}</span>
