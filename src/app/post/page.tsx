@@ -1,6 +1,5 @@
 "use client";
 
-
 import React, { useState, useRef } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -19,8 +18,10 @@ import {
   CodeBracketSquareIcon,
   MinusIcon,
   TableCellsIcon,
+  VideoCameraIcon,
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
+import Loader from "@/app/components/Loader";
 
 export default function CreatePost() {
   const [file, setFile] = useState<File | null>(null);
@@ -44,8 +45,8 @@ export default function CreatePost() {
             "Content-Type": "multipart/form-data",
           },
         });
-        console.log("Image URL:", response.data.imageURL);
-        const imageURL = response.data.imageURL;
+        console.log("Image URL:", response.data.fileURL);
+        const imageURL = response.data.fileURL;
         setPreviewUrl(imageURL);
         setLoading(false);
       } catch (error) {
@@ -85,7 +86,7 @@ export default function CreatePost() {
   const handleStrikethrough = () => insertMarkdownSyntax("~~", "~~");
   const handleUnderline = () => insertMarkdownSyntax("<u>", "</u>");
   const handleUnorderedList = () => insertMarkdownSyntax("- ");
-  const handleOrderedList = () => insertMarkdownSyntax("<ol>", "</ol>");
+  const handleOrderedList = () => insertMarkdownSyntax("1. ");
   const handleCode = () => insertMarkdownSyntax("`", "`");
   const handleCodeBlock = () => insertMarkdownSyntax("```\n", "\n```");
   const handleHeading = () => insertMarkdownSyntax("## ");
@@ -106,11 +107,35 @@ export default function CreatePost() {
             "Content-Type": "multipart/form-data",
           },
         });
-        console.log("Image URL:", response.data.imageURL);
-        const imageURL = response.data.imageURL;
+        console.log("Image URL:", response.data.fileURL);
+        const imageURL = response.data.fileURL;
         insertMarkdownSyntax(`![Image description](${imageURL})`);
       } catch (error) {
         console.error("Error uploading image:", error);
+      }
+    }
+  };
+
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+
+      try {
+        const response = await axios.post("/api/upload", file, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log("Video URL:", response.data.fileURL);
+        const videoURL = response.data.fileURL;
+        insertMarkdownSyntax(
+          `<video controls width="600">
+             <source src="${videoURL}" type="video/mp4">
+             Your browser does not support the video tag.
+           </video>`
+        );
+      } catch (error) {
+        console.error("Error uploading video:", error);
       }
     }
   };
@@ -122,6 +147,17 @@ export default function CreatePost() {
       fileInput.accept = "image/*";
       fileInput.onchange = (e) =>
         handleImageUpload(e as unknown as React.ChangeEvent<HTMLInputElement>);
+      fileInput.click();
+    }
+  };
+
+  const handleVideo = () => {
+    if (textareaRef.current) {
+      const fileInput = document.createElement("input");
+      fileInput.type = "file";
+      fileInput.accept = "video/*";
+      fileInput.onchange = (e) =>
+        handleVideoUpload(e as unknown as React.ChangeEvent<HTMLInputElement>);
       fileInput.click();
     }
   };
@@ -161,245 +197,176 @@ export default function CreatePost() {
   };
 
   return (
-    <div
-      style={{
-        maxWidth: "800px",
-        margin: "0 auto",
-        padding: "20px",
-        backgroundColor: "#ccc",
-        boxSizing: "border-box",
-      }}
-    >
-      <h1 style={{ textAlign: "center", marginBottom: "20px" }}>Create Post</h1>
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: "15px" }}>
-          <label htmlFor="image">
-            <div
-              style={{
-                flexDirection: "column",
-                backgroundColor: "#e0e0e0",
-                border: "2px dashed #ccc",
-                transition: "background-color 0.3s",
-              }}
-              className="hover:bg-gray-300 p-2 flex items-center justify-center w-full h-64 rounded-md cursor-pointer relative"
-            >
-              {loading ? (
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    height: "100%",
-                    width: "100%",
-                  }}
-                >
-                  <svg
-                    className="animate-spin h-8 w-8 text-muted-foreground"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
+    <>
+      <div className="max-w-3xl mx-auto p-5 bg-gray-300 box-border">
+        <h1 className="text-center mb-5">
+          Create Post
+        </h1>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label htmlFor="image">
+              <div
+                style={{
+                  backgroundColor: "#e0e0e0",
+                  border: "2px dashed #ccc",
+                  transition: "background-color 0.3s",
+                }}
+                className="hover:bg-gray-300 p-2 flex flex-col border-2 border-gray-300 transition-colors duration-300 items-center justify-center w-full h-64 rounded-md cursor-pointer relative"
+              >
+                {loading ? (
+                  <Loader />
+                ) : previewUrl ? (
+                  <Image
+                    src={previewUrl}
+                    alt="Preview"
+                    width={300}
+                    height={200}
+                    className="w-full h-full object-cover rounded-sm"
+                  />
+                ) : (
+                  <>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
                       stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                    ></path>
-                  </svg>
-                </div>
-              ) : previewUrl ? (
-                <Image
-                  src={previewUrl}
-                  alt="Preview"
-                  width={300}
-                  height={200}
-                  style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "5px" }}
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="w-12 h-12 text-muted-foreground"
+                    >
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="17 8 12 3 7 8"></polyline>
+                      <line x1="12" x2="12" y1="3" y2="15"></line>
+                    </svg>
+                    <p
+                      style={{
+                        marginTop: "10px",
+                        fontSize: "14px",
+                        color: "#888",
+                      }}
+                    >
+                      Drag and drop your cover picture or click to select a file
+                    </p>
+                  </>
+                )}
+                <input
+                  type="file"
+                  id="image"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  style={{
+                    position: "absolute",
+                    inset: "0",
+                    width: "100%",
+                    height: "100%",
+                    opacity: 0,
+                    cursor: "pointer",
+                  }}
                 />
-              ) : (
-                <>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="w-12 h-12 text-muted-foreground"
-                  >
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="17 8 12 3 7 8"></polyline>
-                    <line x1="12" x2="12" y1="3" y2="15"></line>
-                  </svg>
-                  <p style={{ marginTop: "10px", fontSize: "14px", color: "#888" }}>
-                    Drag and drop your cover picture or click to select a file
-                  </p>
-                </>
-              )}
-              <input
-                type="file"
-                id="image"
-                accept="image/*"
-                onChange={handleFileChange}
-                style={{ position: "absolute", inset: "0", width: "100%", height: "100%", opacity: 0, cursor: "pointer" }}
-              />
-            </div>
-          </label>
-        </div>
-        <div style={{ marginBottom: "15px" }}>
-          <label htmlFor="title">Title:</label>
-          <input
-            type="text"
-            name="title"
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            style={{
-              width: "100%",
-              padding: "10px",
-              fontSize: "16px",
-              marginTop: "10px",
-              boxSizing: "border-box",
-            }}
-            placeholder="Enter the title of your post"
-          />
-        </div>
-        <div style={{ marginBottom: "15px" }}>
-          <label htmlFor="markdown">Content:</label>
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              justifyContent: "center",
-              gap: "10px",
-              marginBottom: "10px",
-            }}
-          >
-            <button title="Bold Text" type="button" onClick={handleBold}>
-              <BoldIcon className="h-6 w-6" />
-            </button>
-            <button title="Italic Text" type="button" onClick={handleItalic}>
-              <ItalicIcon className="h-6 w-6" />
-            </button>
-            <button
-              title="Strikethrough Text"
-              type="button"
-              onClick={handleStrikethrough}
-            >
-              <StrikethroughIcon className="h-6 w-6" />
-            </button>
-            <button
-              title="Underline Text"
-              type="button"
-              onClick={handleUnderline}
-            >
-              <UnderlineIcon className="h-6 w-6" />
-            </button>
-            <button
-              title=" Bullet List"
-              type="button"
-              onClick={handleUnorderedList}
-            >
-              <ListBulletIcon className="h-6 w-6" />
-            </button>
-            <button
-              title="Number List"
-              type="button"
-              onClick={handleOrderedList}
-            >
-              <NumberedListIcon className="h-6 w-6" />
-            </button>
-            <button title="Single line code" type="button" onClick={handleCode}>
-              <CodeBracketIcon className="h-6 w-6" />
-            </button>
-            <button title="Code Block" type="button" onClick={handleCodeBlock}>
-              <CodeBracketSquareIcon className="h-6 w-6" />
-            </button>
-            <button title="Header" type="button" onClick={handleHeading}>
-              <H1Icon className="h-6 w-6" />
-            </button>
-            <button title="Add Link" type="button" onClick={handleLink}>
-              <LinkIcon className="h-6 w-6" />
-            </button>
-            <button title="Add Image" type="button" onClick={handleImage}>
-              <PhotoIcon className="h-6 w-6" />
-            </button>
-            <button
-              title="Horizontal Rule"
-              type="button"
-              onClick={handleHorizontalRule}
-            >
-              <MinusIcon className="h-6 w-6" />
-            </button>
-            <button title="Table" type="button" onClick={handleTable}>
-              <TableCellsIcon className="h-6 w-6" />
-            </button>
+              </div>
+            </label>
           </div>
-          <textarea
-            ref={textareaRef}
-            id="content"
-            value={markdown}
-            onChange={(e) => setMarkdown(e.target.value)}
-            style={{
-              width: "100%",
-              height: "200px",
-              marginTop: "10px",
-              padding: "10px",
-              fontFamily: "monospace",
-              fontSize: "16px",
-              lineHeight: "1.5",
-              boxSizing: "border-box",
-              borderRadius: "5px",
-              borderColor: "#ccc",
-            }}
-            placeholder="Enter your content here"
-          />
-        </div>
-        <div
-          style={{
-            border: "1px solid #ccc",
-            padding: "10px",
-            marginBottom: "15px",
-            borderRadius: "5px",
-          }}
-        >
-          <h2>Preview</h2>
+          <div style={{ marginBottom: "15px" }}>
+            <label htmlFor="title">Title:</label>
+            <input
+              type="text"
+              name="title"
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "10px",
+                fontSize: "16px",
+                marginTop: "10px",
+                boxSizing: "border-box",
+              }}
+              placeholder="Enter the title of your post"
+            />
+          </div>
+          <div style={{ marginBottom: "15px" }}>
+            <label htmlFor="markdown">Content:</label>
+            <div
+              className="flex flex-wrap mb-2.5 gap-3"
+            >
+              <button className="w-6 m-2" title="Bold Text" type="button" onClick={handleBold}>
+                <BoldIcon className="h-6 w-6" />
+              </button>
+              <button className="w-6 m-2" title="Italic Text" type="button" onClick={handleItalic}>
+                <ItalicIcon className="h-6 w-6" />
+              </button>
+              <button className="w-6 m-2" title="Strikethrough Text" type="button" onClick={handleStrikethrough}>
+                <StrikethroughIcon className="h-6 w-6" />
+              </button>
+              <button className="w-6 m-2" title="Underline Text" type="button" onClick={handleUnderline}>
+                <UnderlineIcon className="h-6 w-6" />
+              </button>
+              <button className="w-6 m-2" title=" Bullet List" type="button" onClick={handleUnorderedList}>
+                <ListBulletIcon className="h-6 w-6" />
+              </button>
+              <button className="w-6 m-2" title="Number List" type="button" onClick={handleOrderedList}>
+                <NumberedListIcon className="h-6 w-6" />
+              </button>
+              <button className="w-6 m-2" title="Single line code" type="button" onClick={handleCode}>
+                <CodeBracketIcon className="h-6 w-6" />
+              </button>
+              <button className="w-6 m-2" title="Code Block" type="button" onClick={handleCodeBlock}>
+                <CodeBracketSquareIcon className="h-6 w-6" />
+              </button>
+              <button className="w-6 m-2" title="Header" type="button" onClick={handleHeading}>
+                <H1Icon className="h-6 w-6" />
+              </button>
+              <button className="w-6 m-2" title="Add Link" type="button" onClick={handleLink}>
+                <LinkIcon className="h-6 w-6" />
+              </button>
+              <button className="w-6 m-2" title="Add Image" type="button" onClick={handleImage}>
+                <PhotoIcon className="h-6 w-6" />
+              </button>
+              <button className="w-6 m-2" title="Add Video" type="button" onClick={handleVideo}>
+                <VideoCameraIcon className="h-6 w-6" />
+              </button>
+              <button className="w-6 m-2" title="Horizontal Rule" type="button" onClick={handleHorizontalRule}>
+                <MinusIcon className="h-6 w-6" />
+              </button>
+              <button className="w-6 m-2" title="Table" type="button" onClick={handleTable}>
+                <TableCellsIcon className="h-6 w-6" />
+              </button>
+            </div>
+            <textarea
+              ref={textareaRef}
+              id="content"
+              value={markdown}
+              onChange={(e) => setMarkdown(e.target.value)}
+              className="w-full h-48 mt-2.5 p-2.5 font-mono text-base leading-6 border border-gray-300 rounded-md box-border"
+              placeholder="Enter your content here"
+            />
+          </div>
           <div
-            dangerouslySetInnerHTML={{
-              __html: marked.parse(markdown) as string,
-            }}
-            style={{ lineHeight: "1.5" }}
-          />
-        </div>
-        <button
-          type="submit"
-          style={{
-            padding: "10px 20px",
-            fontSize: "16px",
-            backgroundColor: "black",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-            transition: "background-color 0.3s, color 0.3s",
-            width: "100%",
-          }}
-          className={"hover:bg-white hover:text-black cursor-pointer `${loading ? 'opacity-50 cursor-not-allowed' : ''}`"}
-          disabled={loading}
-        >
-          {loading ? "Uploading Post" : "Upload Post"}
-        </button>
-      </form>
-      {message && <p>{message}</p>}
-    </div>
+            className="border border-gray-300 p-2.5 mb-3 rounded-md"
+          >
+            <h2>Preview</h2>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: marked.parse(markdown) as string,
+              }}
+              style={{ lineHeight: "1.5" }}
+            />
+          </div>
+          <button
+            type="submit"
+            className={
+              "hover:bg-white px-5 py-2.5 text-base text-white bg-black rounded-md transition-colors duration-300 hover:text-black cursor-pointer `${loading ? 'opacity-50 cursor-not-allowed' : ''}`"
+            }
+            disabled={loading}
+          >
+            {loading ? "Uploading Post" : "Upload Post"}
+          </button>
+        </form>
+        {message && <p>{message}</p>}
+      </div>
+    </>
   );
 }
