@@ -9,11 +9,11 @@ import React from "react";
 import landPic from "../../public/landing.jpg";
 
 export default function Home() {
-  const router = useRouter();
+  // const router = useRouter();
 
   return (
     <>
-      <div className="">
+      <div className="" data-testid="result">
       <Header />
       <main className="flex justify-center items-center px-6 lg:px-8 min-h-[470px]">
         <div className="mx-auto max-w-2xl">

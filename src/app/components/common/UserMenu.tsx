@@ -3,11 +3,8 @@
 import React, { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-// import { SessionProvider } from "next-auth/react";
-import Image from "next/image";
+import { SessionProvider } from "next-auth/react";
 import { ChevronDownIcon, ChevronUpIcon, UserCircleIcon, } from "@heroicons/react/24/outline";
-import Link from "next/link";
-import avatar from "../../../../public/default.png";
 import Avatar from "../Avatar"
 import useCurrentUser from "@/app/hook/useCurrentUser";
 

@@ -45,10 +45,10 @@ function LoginPage() {
           <div className="bg-red-500 text-white px-4 py-2 rounded mb-4">{error}</div>
         )}
 
-        <h1 className="text-3xl font-semibold mb-6 text-center">Login</h1>
-
+        <h1 className="text-3xl font-semibold mb-6 text-center">Log In</h1>
         <input
           type="email"
+          data-testid='Email'
           placeholder="somemail@example.com"
           name="email"
           className="border border-gray-300 rounded px-4 py-2 mb-4 w-full text-black placeholder-gray-500"
@@ -56,6 +56,7 @@ function LoginPage() {
         />
         <input
           type="password"
+          data-testid='Password'
           placeholder="******"
           name="password"
           className="border border-gray-300 rounded px-4 py-2 mb-4 w-full text-black placeholder-gray-500"
