@@ -1,7 +1,8 @@
 // Assuming you have a function to call the API
 export async function createTags (tags: string[], postId: string) {
+
   try {
-    const response = await fetch('/api/tag', {
+    const response = await fetch(`${process.env.NEXTAUTH_URL}/api/tag`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -10,6 +11,7 @@ export async function createTags (tags: string[], postId: string) {
     });
 
     const data = await response.json();
+    console.log(data);
 
     if (response.ok) {
       console.log('Tags created and updated:', data);

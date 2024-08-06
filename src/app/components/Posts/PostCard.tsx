@@ -5,6 +5,7 @@ import { PostImage } from "./PostImage";
 import Avatar from "../Avatar";
 import LikeButton from "../LikeButton";
 import BookmarkButton from "../BookmarkButton";
+import { PostTags } from "../PostTags/PostTags";
 import CommentButton from "../CommentButton";
 // import Button from "../Button";
 // import Button from "next/button";
@@ -24,10 +25,11 @@ const formatDate = (date: string | number | Date) => {
 const PostCard = (props: any) => {
   const { data: currentUser } = useCurrentUser();
   const userId = currentUser?._id;
-console.log(userId)
-  const { title, id, image, author, date, titleURL, comments } = props;
+  console.log(userId);
+  const { title, id, image, tags, author, date, titleURL, comments } = props;
+  console.log(tags)
   const formattedDate = formatDate(date);
-  console.log(id)
+  console.log(id);
   return (
     <>
       <div className="bg-white rounded-b-lg">
@@ -42,21 +44,20 @@ console.log(userId)
           <AuthorInfo status="preview" author={author} date={formattedDate} />
           {userId === author.id && (
             <button>
-              <Link href={`/allposts/${title}/edit`}>
-                Edit
-              </Link>
-            </button>)
-          }
+              <Link href={`/allposts/${title}/edit`}>Edit</Link>
+            </button>
+          )}
         </div>
         <div className="px-8">
           <Link href={`/allposts/${title}`} className="title-link">
             <h2>{title}</h2>
           </Link>
-            <div className="flex pb-4">
-              <CommentButton comments={comments} initialTitle={title} />
-              <LikeButton initialTitle={title} />
-              <BookmarkButton initialTitle={title} />
-            </div>
+          <PostTags tags={tags} />
+          <div className="flex pb-4">
+            <CommentButton comments={comments} initialTitle={title} />
+            <LikeButton initialTitle={title} />
+            <BookmarkButton initialTitle={title} />
+          </div>
         </div>
       </div>
     </>

@@ -40,6 +40,7 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
         const file = formData.get('image') as File;
         const tags = formData.get('tags') as string;
         const content = formData.get('content') as string;
+        console.log("my tags:", tags)
 
         if (!title || !file) {
             return NextResponse.json({ message: 'Title or image file is missing' }, { status: 400 });
@@ -78,7 +79,7 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
             await newItem.save();
             await User.findByIdAndUpdate(user._id, { $push: { posts: newItem._id } });
             await createTags(tags.split(','), newItem._id);
-            console.log(newItem);
+            // console.log(newItem);
             return NextResponse.json({ message: 'ok' });
         });
         return NextResponse.json({ message: 'ok' });
@@ -99,7 +100,7 @@ export async function GET (req: NextRequest) {
         const { client, bucket } = await connectToMongoDB();
 
         // Retrieve all posts from the database
-        const posts = await Post.find().populate('author');
+        const posts = await Post.find().populate('author').populate('tags');
 
         if (!posts || posts.length === 0) {
             return NextResponse.json({ message: 'No posts found' });
@@ -121,6 +122,7 @@ export async function GET (req: NextRequest) {
             createdAt: post.createdAt,
             updatedAt: post.updatedAt,
             likes: post.likes,
+            tags: post.tags,
             comments: post.comments,
             bookmarks: post.bookmarks
         }));

@@ -21,10 +21,9 @@ const PostList = (props: any) => {
                   image={post.imageURL}
                   date={post.date}
                   author={props.author || post.author}
-                  //   tags={post.tags}
+                  tags={post.tags}
                   titleURL={post.titleURL}
                   likes={post.likes}
-                  //   unicorns={post.unicorns}
                   bookmarks={post.bookmarks}
                   comments={post.comments}
                 />

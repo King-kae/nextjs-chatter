@@ -1,8 +1,8 @@
 import Tag from "@/models/tag";
-import Post from "../../../models/post";
+import Post from "@/models/post";
 import User from "../../../models/user";
 import { getServerSession } from "next-auth";
-import connectToMongoDB from "../../../lib/db";
+import connectToMongoDB from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "@/utils/authOptions";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -10,37 +10,26 @@ import { NextApiRequest, NextApiResponse } from "next";
 // POST /api/tag
 
 export async function POST(req: NextRequest, res: NextApiResponse) {
-    console.log('here')
+    console.log('here for now')
   const { client } = await connectToMongoDB();
-  const session = await getServerSession({
-    req: NextRequest,
-    res: NextResponse,
-    ...authOptions,
-  });
-  if (!session) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-  }
+//   const session = await getServerSession({
+//     req: NextRequest,
+//     res: NextResponse,
+//     ...authOptions,
+//   });
+//   console.log(session)
+//   if (!session) {
+//     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+//   }
 
   try {
-    const user = await User.findOne({ email: session.user?.email });
-    if (!user) {
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
-    }
-
-    // const { name } = await req.json();
-    // if (!name || typeof name !== 'string') {
-    //     return NextResponse.json({ message: 'Invalid name' }, { status: 400 });
+    // const user = await User.findOne({ email: session.user?.email });
+    // if (!user) {
+    //   return NextResponse.json({ message: "User not found" }, { status: 404 });
     // }
-
-    // const tag = await Tag.findOne({ name });
-    // if (tag) {
-    //     return NextResponse.json({ message: 'Tag already exists' }, { status: 400 });
-    // }
-
-    // const newTag = new Tag({ name });
-    // await newTag.save();
     
     const { tags, postId } = await req.json();
+    console.log(tags, postId)
 
     // Find the post by ID
     const post = await Post.findById(postId);
@@ -51,15 +40,16 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
 
     for (const tag of tags) {
       const postTag = await Tag.findOneAndUpdate(
-        { name: tag.toLowerCase() },
+        { name: tag.toLowerCase().trim() },
         { $addToSet: { posts: post._id } },
         { upsert: true, new: true }
       );
-
+    
       await Post.updateOne(
         { _id: post._id },
         { $addToSet: { tags: postTag._id } }
       );
+      console.log(tag)
     }
 
     return NextResponse.json({
@@ -69,4 +59,26 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
     console.error(error);
     return NextResponse.json({ message: "An error occurred" }, { status: 500 });
   }
+}
+
+
+
+export async function GET(req: NextRequest, res: NextApiResponse) {
+    const { client } = await connectToMongoDB();
+
+    try {
+        const tags = await Tag.find().populate("posts");
+
+        if(!tags || tags.length === 0) {
+            return NextResponse.json({ message: "Tags not found" }, { status: 404 });
+        }
+
+        return NextResponse.json(tags);
+    } catch (error) {
+        return NextResponse.json(
+            { message: "Error retrieving tags", error },
+            { status: 500 }
+        );
+    }
+    
 }
