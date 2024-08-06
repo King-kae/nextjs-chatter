@@ -28,7 +28,7 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
 
         const {client} = await connectToMongoDB();
 
-        const user = await User.findById(userId).exec();
+        const user = await User.findById(userId);
 
         if (!user) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
@@ -71,7 +71,7 @@ export async function DELETE(req: NextRequest, res: NextApiResponse) {
 
         const { client } = await connectToMongoDB();
 
-        const user = await User.findById(userId).exec();
+        const user = await User.findById(userId);
 
         if (!user) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });

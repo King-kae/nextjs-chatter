@@ -20,6 +20,7 @@ const postSchema = new Schema(
         titleURL: {
           type: String
         },
+        tags: [{ type: Schema.Types.ObjectId, required: true, ref: 'Tag' }],
         likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
         bookmarks: [{ type: Schema.Types.ObjectId, ref: 'User' }],
         comments: [{ type: Schema.Types.ObjectId, required: true, ref: 'Comment' }],

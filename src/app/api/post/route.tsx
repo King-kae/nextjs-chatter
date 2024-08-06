@@ -3,10 +3,10 @@ import User from "../../../models/user";
 import { getServerSession } from "next-auth";
 import connectToMongoDB from "../../../lib/db";
 import { NextRequest, NextResponse } from "next/server";
-// import { authOptions } from "../auth/[...nextauth]/route";
 import { authOptions } from '@/utils/authOptions';
 import { NextApiRequest, NextApiResponse } from "next";
 import { Readable } from "stream";
+ import { createTags } from "@/lib/tags"
 
 
 
@@ -38,6 +38,7 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
         // Extract fields directly from formData
         const title = formData.get('title') as string;
         const file = formData.get('image') as File;
+        const tags = formData.get('tags') as string;
         const content = formData.get('content') as string;
 
         if (!title || !file) {
@@ -76,6 +77,7 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
             });
             await newItem.save();
             await User.findByIdAndUpdate(user._id, { $push: { posts: newItem._id } });
+            await createTags(tags.split(','), newItem._id);
             console.log(newItem);
             return NextResponse.json({ message: 'ok' });
         });

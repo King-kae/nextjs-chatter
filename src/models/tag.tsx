@@ -15,4 +15,4 @@ const tagSchema = new Schema({
 
 const Tag = models.Tag || model("Tag", tagSchema);
 
-module.exports = Tag; //returns a constructor function
+export default Tag; //returns a constructor function

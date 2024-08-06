@@ -1,0 +1,28 @@
+// Assuming you have a function to call the API
+export async function createTags (tags: string[], postId: string) {
+  try {
+    const response = await fetch('/api/tag', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ tags, postId }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log('Tags created and updated:', data);
+    } else {
+      console.error('Error creating tags:', data.error);
+    }
+  } catch (error) {
+    console.error('Unexpected error:', error);
+  }
+};
+
+// Example usage
+// const tags = ['JavaScript', 'React', 'Next.js'];
+// const postId = 'some-post-id';
+
+// createTags(tags, postId);

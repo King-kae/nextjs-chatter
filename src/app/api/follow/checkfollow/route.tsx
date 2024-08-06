@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     await connectToMongoDB();
 
     try {
-        const user = await User.findById({ userId }).exec();
+        const user = await User.findById(userId);
 
         if (!user) {
             return NextResponse.json({ error: 'user not found' }, { status: 404 });

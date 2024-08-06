@@ -78,7 +78,7 @@ const EditModal: React.FC = () => {
           },
         });
         console.log("Image URL:", response.data.imageURL);
-        const imageURL = response.data.imageURL;
+        const imageURL = response.data.fileURL;
         setProfileImage(imageURL);
         // setLoading(false);
       } catch (error) {

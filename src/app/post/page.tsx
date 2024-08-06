@@ -26,6 +26,7 @@ import Loader from "@/app/components/Loader";
 export default function CreatePost() {
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
+  const [tags, setTags] = useState("");
   const [error, setError] = useState("");
   const [previewUrl, setPreviewUrl] = useState(null);
   const [markdown, setMarkdown] = useState("");
@@ -191,9 +192,10 @@ export default function CreatePost() {
     e.preventDefault();
     console.log(file);
     console.log(title);
+    console.log(tags);
     console.log(markdown);
 
-    if (!file || !title || !markdown) {
+    if (!file || !tags || !title || !markdown) {
       setMessage("Please fill in all fields and select a file.");
       return;
     }
@@ -201,6 +203,7 @@ export default function CreatePost() {
     const formData = new FormData();
     formData.append("image", file);
     formData.append("title", title);
+    formData.append("tags", tags);
     formData.append("content", markdown);
 
     try {
@@ -295,6 +298,18 @@ export default function CreatePost() {
               onChange={(e) => setTitle(e.target.value)}
               className="w-full p-2.5 text-base mt-2.5 box-border"
               placeholder="Enter the title of your post"
+            />
+          </div>
+          <div>
+            <label htmlFor="tags">Tags</label>
+            <input
+              type="text"
+              name="tags"
+              value={tags}
+              onChange={(e) => setTags(e.target.value)}
+              id="tags"
+              className="w-full p-2.5 text-base mt-2.5 box-border"
+              placeholder="Enter tags separated by commas"
             />
           </div>
           <div style={{ marginBottom: "15px" }}>

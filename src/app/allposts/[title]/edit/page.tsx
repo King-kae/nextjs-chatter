@@ -16,6 +16,7 @@ import {
   CodeBracketIcon,
   H1Icon,
   CodeBracketSquareIcon,
+  VideoCameraIcon,
 } from "@heroicons/react/24/outline";
 import axios from "axios";
 import Image from "next/image";
@@ -38,6 +39,8 @@ export default function EditPostPage({
 
   const [newTitle, setNewTitle] = useState<string>("");
   const [markdown, setMarkdown] = useState("");
+  const [newerror, setNewError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const [file, setFile] = useState<string | File | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -66,8 +69,8 @@ export default function EditPostPage({
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
+      // setLoading(true);
       try {
-        // setLoading(true);
         const formData = new FormData();
         formData.append("file", file);
         const response = await axios.post("/api/upload", file, {
@@ -75,8 +78,8 @@ export default function EditPostPage({
             "Content-Type": "multipart/form-data",
           },
         });
-        console.log("Image URL:", response.data.imageURL);
-        const imageURL = response.data.imageURL;
+        console.log("Image URL:", response.data.fileURL);
+        const imageURL = response.data.fileURL;
         setFile(imageURL);
         // setLoading(false);
       } catch (error) {
@@ -126,17 +129,66 @@ export default function EditPostPage({
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
 
+      setLoading(true);
       try {
+        insertMarkdownSyntax("Upload in progress...");
         const response = await axios.post("/api/upload", file, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         });
-        console.log("Image URL:", response.data.imageURL);
-        const imageURL = response.data.imageURL;
-        insertMarkdownSyntax(`![Image description](${imageURL})`);
+        console.log("Image URL:", response.data.fileURL);
+        const imageURL = response.data.fileURL;
+        setMarkdown((prevMarkdown) =>
+          prevMarkdown.replace(
+            "Upload in progress...",
+            `![Image description](${imageURL})`
+          )
+        );
+        setLoading(false);
       } catch (error) {
         console.error("Error uploading image:", error);
+      }
+    }
+  };
+
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      console.log(file);
+      console.log("File size:", file.size);
+
+      // Check file size (10MB = 10 * 1024 * 1024 bytes)
+      if (file.size > 10 * 1024 * 1024) {
+        setNewError("File size exceeds the 10MB limit.");
+        return;
+      } else {
+        setNewError(""); // Clear error message if file is valid
+      }
+
+      setLoading(true);
+      try {
+        insertMarkdownSyntax("Upload in progress...");
+
+        const response = await axios.post("/api/upload", file, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log("Video URL:", response.data.fileURL);
+        const videoURL = response.data.fileURL;
+        setMarkdown((prevMarkdown) =>
+          prevMarkdown.replace(
+            "Upload in progress...",
+            `<video controls width="600" height="600">
+             <source src="${videoURL}" type="video/mp4">
+
+           </video>`
+          )
+        );
+        setLoading(false);
+      } catch (error) {
+        console.error("Error uploading video:", error);
       }
     }
   };
@@ -152,6 +204,17 @@ export default function EditPostPage({
     }
   };
 
+  const handleVideo = () => {
+    if (textareaRef.current) {
+      const fileInput = document.createElement("input");
+      fileInput.type = "file";
+      fileInput.accept = "video/*";
+      fileInput.onchange = (e) =>
+        handleVideoUpload(e as unknown as React.ChangeEvent<HTMLInputElement>);
+      fileInput.click();
+    }
+  };
+
   const updatePost = async () => {
     if (!data) return;
     const formData = new FormData();
@@ -161,14 +224,14 @@ export default function EditPostPage({
       formData.append("image", "");
     }
     formData.append("title", newTitle);
-    formData.append("content", markdown)
+    formData.append("content", markdown);
 
     const response = await axios.put(`/api/post/${title}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     });
-    
+
     if (response.status !== 200) {
       throw new Error("Failed to update post");
     }
@@ -183,9 +246,8 @@ export default function EditPostPage({
   });
 
   const handleSubmit = (e: React.FormEvent) => {
-
     e.preventDefault();
-    // if 
+    // if
     mutation.mutate();
   };
 
@@ -194,35 +256,35 @@ export default function EditPostPage({
 
   return (
     <>
-      <div 
+      <div
         style={{
-            maxWidth: "800px",
-            margin: "0 auto",
-            padding: "20px",
-            backgroundColor: "#ccc",
+          maxWidth: "800px",
+          margin: "0 auto",
+          padding: "20px",
+          backgroundColor: "#ccc",
         }}
       >
         <h1>Edit Post</h1>
         <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: "15px" }}>
+          <div className="mb-4">
             <label htmlFor="image">Cover Image:</label>
             <div onClick={() => fileInputRef.current?.click()} className="p-6">
               <div className="flex flex-col items-center justify-center w-full h-64 bg-muted rounded-md border-2 border-dashed border-muted-foreground/50 cursor-pointer transition-colors hover:bg-muted/50 relative">
-              {file && (
-                <Image
-                  src={typeof file === "string" ? file : ''}
-                  alt="Cover Image"
-                  className="w-full h-full object-cover rounded-md"
+                {file && (
+                  <Image
+                    src={typeof file === "string" ? file : ""}
+                    alt="Cover Image"
+                    className="w-full h-full object-cover rounded-md"
+                  />
+                )}
+                <input
+                  type="file"
+                  id="image"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
                 />
-              )}
-              <input
-                type="file"
-                id="image"
-                accept="image/*"
-                style={{ display: "none" }}
-                ref={fileInputRef}
-                onChange={handleFileChange}
-              />
               </div>
             </div>
           </div>
@@ -232,71 +294,110 @@ export default function EditPostPage({
               type="text"
               id="title"
               value={newTitle}
-              style={{
-                width: "100%",
-                padding: "10px",
-                fontSize: "16px",
-                marginTop: "10px",
-              }}
+              className="w-full p-2.5 text-base mt-2.5"
               onChange={(e) => setNewTitle(e.target.value)}
             />
           </div>
           <div style={{ marginBottom: "15px" }}>
             <label htmlFor="content">Content:</label>
-            <div
-            className="text-center flex gap-9"
-            style={{ marginBottom: "10px" }}
-          >
-            <button title="Bold Text" type="button" onClick={handleBold}>
-              <BoldIcon className="h-6 w-6" />
-            </button>
-            <button title="Italic Text" type="button" onClick={handleItalic}>
-              <ItalicIcon className="h-6 w-6" />
-            </button>
-            <button
-              title="Strikethrough Text"
-              type="button"
-              onClick={handleStrikethrough}
-            >
-              <StrikethroughIcon className="h-6 w-6" />
-            </button>
-            <button
-              title="Underline Text"
-              type="button"
-              onClick={handleUnderline}
-            >
-              <UnderlineIcon className="h-6 w-6" />
-            </button>
-            <button
-              title=" Bullet List"
-              type="button"
-              onClick={handleUnorderedList}
-            >
-              <ListBulletIcon className="h-6 w-6" />
-            </button>
-            <button
-              title="Number List"
-              type="button"
-              onClick={handleOrderedList}
-            >
-              <NumberedListIcon className="h-6 w-6" />
-            </button>
-            <button title="Single line code" type="button" onClick={handleCode}>
-              <CodeBracketIcon className="h-6 w-6" />
-            </button>
-            <button title="Code Block" type="button" onClick={handleCodeBlock}>
-              <CodeBracketSquareIcon className="h-6 w-6" />
-            </button>
-            <button title="Header" type="button" onClick={handleHeading}>
-              <H1Icon className="h-6 w-6" />
-            </button>
-            <button title="Add Link" type="button" onClick={handleLink}>
-              <LinkIcon className="h-6 w-6" />
-            </button>
-            <button title="Add Image" type="button" onClick={handleImage}>
-              <PhotoIcon className="h-6 w-6" />
-            </button>
-          </div>
+            <div className="flex flex-wrap mb-2.5 gap-3">
+              <button
+                className="w-6 m-2"
+                title="Bold Text"
+                type="button"
+                onClick={handleBold}
+              >
+                <BoldIcon className="h-6 w-6" />
+              </button>
+              <button
+                className="w-6 m-2"
+                title="Italic Text"
+                type="button"
+                onClick={handleItalic}
+              >
+                <ItalicIcon className="h-6 w-6" />
+              </button>
+              <button
+                className="w-6 m-2"
+                title="Strikethrough Text"
+                type="button"
+                onClick={handleStrikethrough}
+              >
+                <StrikethroughIcon className="h-6 w-6" />
+              </button>
+              <button
+                className="w-6 m-2"
+                title="Underline Text"
+                type="button"
+                onClick={handleUnderline}
+              >
+                <UnderlineIcon className="h-6 w-6" />
+              </button>
+              <button
+                className="w-6 m-2"
+                title=" Bullet List"
+                type="button"
+                onClick={handleUnorderedList}
+              >
+                <ListBulletIcon className="h-6 w-6" />
+              </button>
+              <button
+                className="w-6 m-2"
+                title="Number List"
+                type="button"
+                onClick={handleOrderedList}
+              >
+                <NumberedListIcon className="h-6 w-6" />
+              </button>
+              <button
+                className="w-6 m-2"
+                title="Single line code"
+                type="button"
+                onClick={handleCode}
+              >
+                <CodeBracketIcon className="h-6 w-6" />
+              </button>
+              <button
+                className="w-6 m-2"
+                title="Code Block"
+                type="button"
+                onClick={handleCodeBlock}
+              >
+                <CodeBracketSquareIcon className="h-6 w-6" />
+              </button>
+              <button
+                className="w-6 m-2"
+                title="Header"
+                type="button"
+                onClick={handleHeading}
+              >
+                <H1Icon className="h-6 w-6" />
+              </button>
+              <button
+                className="w-6 m-2"
+                title="Add Link"
+                type="button"
+                onClick={handleLink}
+              >
+                <LinkIcon className="h-6 w-6" />
+              </button>
+              <button
+                className="w-6 m-2"
+                title="Add Image"
+                type="button"
+                onClick={handleImage}
+              >
+                <PhotoIcon className="h-6 w-6" />
+              </button>
+              <button
+                className="w-6 m-2"
+                title="Add Video"
+                type="button"
+                onClick={handleVideo}
+              >
+                <VideoCameraIcon className="h-6 w-6" />
+              </button>
+            </div>
             <textarea
               ref={textareaRef}
               id="content"
@@ -329,7 +430,7 @@ export default function EditPostPage({
             />
           </div>
           <button
-            className="bg-black text-white hover:bg-white hover:text-black" 
+            className="bg-black text-white hover:bg-white hover:text-black"
             type="submit"
             style={{ padding: "10px 20px", fontSize: "16px" }}
           >
