@@ -26,6 +26,7 @@ import Loader from "@/app/components/Loader";
 export default function CreatePost() {
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
+  const [error, setError] = useState("");
   const [previewUrl, setPreviewUrl] = useState(null);
   const [markdown, setMarkdown] = useState("");
   const [message, setMessage] = useState("");
@@ -100,8 +101,11 @@ export default function CreatePost() {
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
+      setLoading(true);
 
       try {
+        insertMarkdownSyntax("Upload in progress...");
+
         const response = await axios.post("/api/upload", file, {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -109,7 +113,11 @@ export default function CreatePost() {
         });
         console.log("Image URL:", response.data.fileURL);
         const imageURL = response.data.fileURL;
-        insertMarkdownSyntax(`![Image description](${imageURL})`);
+        // Replace placeholder with actual markdown image syntax
+        setMarkdown((prevMarkdown) =>
+          prevMarkdown.replace("Upload in progress...", `![Image description](${imageURL})`)
+        );
+        setLoading(false);
       } catch (error) {
         console.error("Error uploading image:", error);
       }
@@ -119,8 +127,21 @@ export default function CreatePost() {
   const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
+      console.log(file);
+      console.log("File size:", file.size);
 
+      // Check file size (10MB = 10 * 1024 * 1024 bytes)
+      if (file.size > 10 * 1024 * 1024) {
+        setError("File size exceeds the 10MB limit.");
+        return;
+      } else {
+        setError(""); // Clear error message if file is valid
+      }
+
+      setLoading(true);
       try {
+        insertMarkdownSyntax("Upload in progress...");
+
         const response = await axios.post("/api/upload", file, {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -128,12 +149,16 @@ export default function CreatePost() {
         });
         console.log("Video URL:", response.data.fileURL);
         const videoURL = response.data.fileURL;
-        insertMarkdownSyntax(
-          `<video controls width="600">
+        setMarkdown((prevMarkdown) =>
+          prevMarkdown.replace(
+            "Upload in progress...",
+            `<video controls width="600" height="600">
              <source src="${videoURL}" type="video/mp4">
-             Your browser does not support the video tag.
+
            </video>`
+          )
         );
+        setLoading(false);
       } catch (error) {
         console.error("Error uploading video:", error);
       }
@@ -199,9 +224,7 @@ export default function CreatePost() {
   return (
     <>
       <div className="max-w-3xl mx-auto p-5 bg-gray-300 box-border">
-        <h1 className="text-center mb-5">
-          Create Post
-        </h1>
+        <h1 className="text-center mb-5">Create Post</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="image">
@@ -257,14 +280,7 @@ export default function CreatePost() {
                   id="image"
                   accept="image/*"
                   onChange={handleFileChange}
-                  style={{
-                    position: "absolute",
-                    inset: "0",
-                    width: "100%",
-                    height: "100%",
-                    opacity: 0,
-                    cursor: "pointer",
-                  }}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 />
               </div>
             </label>
@@ -277,61 +293,123 @@ export default function CreatePost() {
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              style={{
-                width: "100%",
-                padding: "10px",
-                fontSize: "16px",
-                marginTop: "10px",
-                boxSizing: "border-box",
-              }}
+              className="w-full p-2.5 text-base mt-2.5 box-border"
               placeholder="Enter the title of your post"
             />
           </div>
           <div style={{ marginBottom: "15px" }}>
             <label htmlFor="markdown">Content:</label>
-            <div
-              className="flex flex-wrap mb-2.5 gap-3"
-            >
-              <button className="w-6 m-2" title="Bold Text" type="button" onClick={handleBold}>
+            <div className="flex flex-wrap mb-2.5 gap-3">
+              <button
+                className="w-6 m-2"
+                title="Bold Text"
+                type="button"
+                onClick={handleBold}
+              >
                 <BoldIcon className="h-6 w-6" />
               </button>
-              <button className="w-6 m-2" title="Italic Text" type="button" onClick={handleItalic}>
+              <button
+                className="w-6 m-2"
+                title="Italic Text"
+                type="button"
+                onClick={handleItalic}
+              >
                 <ItalicIcon className="h-6 w-6" />
               </button>
-              <button className="w-6 m-2" title="Strikethrough Text" type="button" onClick={handleStrikethrough}>
+              <button
+                className="w-6 m-2"
+                title="Strikethrough Text"
+                type="button"
+                onClick={handleStrikethrough}
+              >
                 <StrikethroughIcon className="h-6 w-6" />
               </button>
-              <button className="w-6 m-2" title="Underline Text" type="button" onClick={handleUnderline}>
+              <button
+                className="w-6 m-2"
+                title="Underline Text"
+                type="button"
+                onClick={handleUnderline}
+              >
                 <UnderlineIcon className="h-6 w-6" />
               </button>
-              <button className="w-6 m-2" title=" Bullet List" type="button" onClick={handleUnorderedList}>
+              <button
+                className="w-6 m-2"
+                title=" Bullet List"
+                type="button"
+                onClick={handleUnorderedList}
+              >
                 <ListBulletIcon className="h-6 w-6" />
               </button>
-              <button className="w-6 m-2" title="Number List" type="button" onClick={handleOrderedList}>
+              <button
+                className="w-6 m-2"
+                title="Number List"
+                type="button"
+                onClick={handleOrderedList}
+              >
                 <NumberedListIcon className="h-6 w-6" />
               </button>
-              <button className="w-6 m-2" title="Single line code" type="button" onClick={handleCode}>
+              <button
+                className="w-6 m-2"
+                title="Single line code"
+                type="button"
+                onClick={handleCode}
+              >
                 <CodeBracketIcon className="h-6 w-6" />
               </button>
-              <button className="w-6 m-2" title="Code Block" type="button" onClick={handleCodeBlock}>
+              <button
+                className="w-6 m-2"
+                title="Code Block"
+                type="button"
+                onClick={handleCodeBlock}
+              >
                 <CodeBracketSquareIcon className="h-6 w-6" />
               </button>
-              <button className="w-6 m-2" title="Header" type="button" onClick={handleHeading}>
+              <button
+                className="w-6 m-2"
+                title="Header"
+                type="button"
+                onClick={handleHeading}
+              >
                 <H1Icon className="h-6 w-6" />
               </button>
-              <button className="w-6 m-2" title="Add Link" type="button" onClick={handleLink}>
+              <button
+                className="w-6 m-2"
+                title="Add Link"
+                type="button"
+                onClick={handleLink}
+              >
                 <LinkIcon className="h-6 w-6" />
               </button>
-              <button className="w-6 m-2" title="Add Image" type="button" onClick={handleImage}>
+              <button
+                className="w-6 m-2"
+                title="Add Image"
+                type="button"
+                onClick={handleImage}
+              >
                 <PhotoIcon className="h-6 w-6" />
               </button>
-              <button className="w-6 m-2" title="Add Video" type="button" onClick={handleVideo}>
+              <button
+                className="w-6 m-2"
+                title="Add Video"
+                type="button"
+                onClick={handleVideo}
+              >
                 <VideoCameraIcon className="h-6 w-6" />
               </button>
-              <button className="w-6 m-2" title="Horizontal Rule" type="button" onClick={handleHorizontalRule}>
+              <button
+                className="w-6 m-2"
+                title="Horizontal Rule"
+                type="button"
+                onClick={handleHorizontalRule}
+              >
                 <MinusIcon className="h-6 w-6" />
               </button>
-              <button className="w-6 m-2" title="Table" type="button" onClick={handleTable}>
+              <button
+                className="w-6 m-2"
+                title="Table"
+                type="button"
+                onClick={handleTable}
+              >
                 <TableCellsIcon className="h-6 w-6" />
               </button>
             </div>
@@ -344,9 +422,7 @@ export default function CreatePost() {
               placeholder="Enter your content here"
             />
           </div>
-          <div
-            className="border border-gray-300 p-2.5 mb-3 rounded-md"
-          >
+          <div className="border border-gray-300 p-2.5 mb-3 rounded-md">
             <h2>Preview</h2>
             <div
               dangerouslySetInnerHTML={{
@@ -366,6 +442,7 @@ export default function CreatePost() {
           </button>
         </form>
         {message && <p>{message}</p>}
+        {error && <p className="text-red-500">{error}</p>}
       </div>
     </>
   );
