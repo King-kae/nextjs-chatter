@@ -21,6 +21,7 @@ const postSchema = new Schema(
           type: String
         },
         tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
+        views: [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
         likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
         bookmarks: [{ type: Schema.Types.ObjectId, ref: 'User' }],
         comments: [{ type: Schema.Types.ObjectId, required: true, ref: 'Comment' }],

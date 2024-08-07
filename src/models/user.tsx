@@ -32,6 +32,7 @@ const userSchema = new Schema({
   posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
   comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
   liked: [{ type: Schema.Types.ObjectId, ref: "Post" }],
+  viewed: [{ type: Schema.Types.ObjectId, ref: "Post" }],
   following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   followedTags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],

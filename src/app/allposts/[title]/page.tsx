@@ -13,6 +13,7 @@ import { marked } from "marked";
 import useCurrentUser from "@/app/hook/useCurrentUser";
 import { AuthorInfo } from "@/app/components/AuthorInfo/AuthorInfo";
 import Image from "next/image";
+import { PostTags } from "@/app/components/PostTags/PostTags";
 
 interface PostPageProps {
   params: { title: string };
@@ -65,6 +66,8 @@ export default function PostPage({ params }: PostPageProps) {
     queryKey: ["post", title],
     queryFn: () => fetchPost(title),
   });
+
+  console.log(post);
 
   // Fetch comments data
   const {
@@ -121,9 +124,11 @@ export default function PostPage({ params }: PostPageProps) {
       <div className="flex items-center gap-x-4 p-4 bg-white shadow rounded-md">
         <Avatar seed={currentUser._id} size="small" />
         <AuthorInfo status="preview" author={currentUser} date={formattedDate} />
+        <h1>{post.views.length || 0}</h1>
       </div>
 
       <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
+      <PostTags tags={post.tags} />
       <div
         className="prose max-w-none mb-8"
         dangerouslySetInnerHTML={{ __html: htmlContent as string }}

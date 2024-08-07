@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
   await connectToMongoDB();
 
   try {
-    const posts = await Post.find({ author: user._id });
+    const posts = await Post.find({ author: user._id }).populate('tags');
     return NextResponse.json(posts, { status: 200 });
   } catch (error) {
     return NextResponse.json(

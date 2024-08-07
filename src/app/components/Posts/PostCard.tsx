@@ -7,8 +7,7 @@ import LikeButton from "../LikeButton";
 import BookmarkButton from "../BookmarkButton";
 import { PostTags } from "../PostTags/PostTags";
 import CommentButton from "../CommentButton";
-// import Button from "../Button";
-// import Button from "next/button";
+import { EyeIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
 const formatDate = (date: string | number | Date) => {
@@ -26,7 +25,7 @@ const PostCard = (props: any) => {
   const { data: currentUser } = useCurrentUser();
   const userId = currentUser?._id;
   console.log(userId);
-  const { title, id, image, tags, author, date, titleURL, comments } = props;
+  const { title, id, views, image, tags, author, date, titleURL, comments } = props;
   console.log(tags)
   const formattedDate = formatDate(date);
   console.log(id);
@@ -42,15 +41,16 @@ const PostCard = (props: any) => {
         <div className="flex gap-x-8 p-8">
           <Avatar seed={author.id} size="small" />
           <AuthorInfo status="preview" author={author} date={formattedDate} />
+          <span><EyeIcon className='h-6 w-6' />{views?.length || 0}</span>
           {userId === author.id && (
-            <button>
-              <Link href={`/allposts/${title}/edit`}>Edit</Link>
+            <button className="py-2 px-1 bg-black">
+              <Link href={`/allposts/${title}/edit`} className="text-white">Edit</Link>
             </button>
           )}
         </div>
         <div className="px-8">
           <Link href={`/allposts/${title}`} className="title-link">
-            <h2>{title}</h2>
+            <h2 className="hover:text-blue-500 cursor-pointer">{title}</h2>
           </Link>
           <PostTags tags={tags} />
           <div className="flex pb-4">

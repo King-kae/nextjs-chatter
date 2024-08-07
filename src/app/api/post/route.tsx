@@ -123,6 +123,7 @@ export async function GET (req: NextRequest) {
             updatedAt: post.updatedAt,
             likes: post.likes,
             tags: post.tags,
+            views: post.views,
             comments: post.comments,
             bookmarks: post.bookmarks
         }));

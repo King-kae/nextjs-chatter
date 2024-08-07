@@ -181,9 +181,7 @@ export default function EditPostPage({
           prevMarkdown.replace(
             "Upload in progress...",
             `<video controls width="600" height="600">
-             <source src="${videoURL}" type="video/mp4">
-
-           </video>`
+             <source src="${videoURL}" type="video/mp4"></video>`
           )
         );
         setLoading(false);

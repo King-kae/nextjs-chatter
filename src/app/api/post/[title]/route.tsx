@@ -12,19 +12,42 @@ export async function GET(
   req: NextRequest,
   { params }: { params: { title: string } }
 ) {
+
+  const session = await getServerSession(authOptions);
+  
+  if (!session) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
   const { title } = params;
 
   if (!title) {
     return NextResponse.json({ message: "Title is required" }, { status: 400 });
   }
-
+  
   const { client } = await connectToMongoDB();
-
+  
   try {
-    const post = await Post.findOne({ title }).populate("author");
-
+    
+    const user = await User.findOne({ email: session.user?.email });
+    if (!user) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
+    
+    const post = await Post.findOne({ title }).populate("author").populate("tags");
+    
     if (!post) {
       return NextResponse.json({ message: "Post not found" }, { status: 404 });
+    }
+    
+    const userId = user._id;
+    
+    const userHasViewed = post.views.includes(userId);
+    
+    console.log("right here")
+    if (!userHasViewed) {
+      post.views.push(userId);
+      await post.save();
     }
 
     return NextResponse.json(post);
