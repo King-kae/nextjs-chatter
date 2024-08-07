@@ -9,9 +9,10 @@ import PostList from "../PostList/PostList";
 const getAllPosts = async () => {
   try {
     const response = await axios.get("/api/post");
+    console.log(response.data.data)
     return response.data.data || [];
   } catch (error: any) {
-    console.log(error);
+    console.log(error.message);
     return { error: error.message };
   }
 };
@@ -21,6 +22,7 @@ export default function ShowAllPosts() {
     queryKey: ["posts"],
     queryFn: getAllPosts,
   });
+  console.log(data)
 
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -37,7 +39,7 @@ export default function ShowAllPosts() {
     );
 
   if (isError) return <div>Error: {error.message}</div>;
-  if (!data) return <div>No data</div>;
+  if (!data || data.length === 0) return <div>No data</div>;
 
   return (
     <>
@@ -56,6 +58,7 @@ export default function ShowAllPosts() {
           <PostList items={filteredPosts} />
         )}
       </div>
+      {/* <h1>here</h1> */}
     </>
   );
 }

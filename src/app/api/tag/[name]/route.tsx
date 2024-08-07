@@ -14,12 +14,24 @@ export async function GET( req: NextRequest,
     const { client } = await connectToMongoDB();
 
     try {
-        const tag = await Tag.findOne({ name }).populate("posts");
+        const tag = await Tag.findOne({ name }).populate({
+            path: 'posts',
+            populate: {
+              path: 'tags',
+            },
+          })
+          .populate({
+            path: 'posts',
+            populate: {
+              path: 'author',
+            },
+          });
 
         if(!tag) {
             return NextResponse.json({ message: "Tag not found" }, { status: 404 });
         }
 
+        console.log(tag)
         return NextResponse.json(tag);
     } catch (error) {
         return NextResponse.json(

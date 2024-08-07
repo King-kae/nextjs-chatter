@@ -101,7 +101,7 @@ export async function GET (req: NextRequest) {
 
         // Retrieve all posts from the database
         const posts = await Post.find().populate('author').populate('tags');
-
+        console.log(posts)
         if (!posts || posts.length === 0) {
             return NextResponse.json({ message: 'No posts found' });
         }
