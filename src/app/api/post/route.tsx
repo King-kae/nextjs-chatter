@@ -7,9 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "@/utils/authOptions";
 import { NextApiRequest, NextApiResponse } from "next";
 import { Readable } from "stream";
-import { createTags } from "@/lib/tags";
 
-console.log("Tag model:", Tag);
 
 // POST /api/post
 // Required fields in body: title
@@ -87,7 +85,7 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
       });
       await newItem.save();
       await User.findByIdAndUpdate(user._id, { $push: { posts: newItem._id } });
-      
+
       // Handle tags
       const tagsArray = tags.split(',').map(tag => tag.trim());
       for (let i = 0; i < tagsArray.length; i++) {

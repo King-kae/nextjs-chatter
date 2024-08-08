@@ -41,6 +41,7 @@ export default function EditPostPage({
   const [markdown, setMarkdown] = useState("");
   const [newerror, setNewError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [tags, setTags] = useState<string>("");
   const [file, setFile] = useState<string | File | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -62,6 +63,8 @@ export default function EditPostPage({
     if (data) {
       setNewTitle(data.title);
       setMarkdown(data.content);
+      const tagNames = data.tags.map((tag: { name: string }) => tag.name);
+      setTags(tagNames.join(", "));
       setFile(data.imageURL);
     }
   }, [data]);
@@ -223,6 +226,7 @@ export default function EditPostPage({
     }
     formData.append("title", newTitle);
     formData.append("content", markdown);
+    formData.append("tags", tags);
 
     const response = await axios.put(`/api/post/${title}`, formData, {
       headers: {
@@ -272,6 +276,8 @@ export default function EditPostPage({
                   <Image
                     src={typeof file === "string" ? file : ""}
                     alt="Cover Image"
+                    width={400}
+                    height={200}
                     className="w-full h-full object-cover rounded-md"
                   />
                 )}
@@ -294,6 +300,17 @@ export default function EditPostPage({
               value={newTitle}
               className="w-full p-2.5 text-base mt-2.5"
               onChange={(e) => setNewTitle(e.target.value)}
+            />
+          </div>
+          <div style={{ marginBottom: "15px" }}>
+            <label htmlFor="tags">Tags:</label>
+            <input
+              name="tags"
+              type="text"
+              id="tags"
+              value={tags}
+              className="w-full p-2.5 text-base mt-2.5"
+              onChange={(e) => setTags(e.target.value)}
             />
           </div>
           <div style={{ marginBottom: "15px" }}>

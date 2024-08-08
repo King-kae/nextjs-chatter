@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 // import { authOptions } from "../../auth/[...nextauth]/route";
 import { authOptions } from '@/utils/authOptions';
 import User from "@/models/user";
+import Tag from "@/models/tag";
 
 // GET /posts/:title
 
@@ -107,7 +108,7 @@ export async function DELETE(
 export async function PUT(
   req: NextRequest,
   { params }: { params: { title: string } }
-) {
+  ) {
   // console.log("PUT request");
   const session = await getServerSession(authOptions);
 
@@ -148,11 +149,36 @@ export async function PUT(
     
     const newTitle = formData.get("title") as string;
     const markdown = formData.get("content") as string;
+    const tagsString = formData.get("tags") as string;
     const file = formData.get("image") as string;
 
     post.title = newTitle;
     post.content = markdown;
     post.imageURL = file;
+    const tagsArray = tagsString.split(',').map(tag => tag.trim().toLowerCase());
+
+    const tagIds = [];
+    for (const tagName of tagsArray) {
+      // Find or create the tag
+      let tag = await Tag.findOne({ name: tagName });
+      if (!tag) {
+        tag = new Tag({ name: tagName });
+        await tag.save();
+      }
+
+      // Add tag ID to list
+      tagIds.push(tag._id);
+
+      // Ensure the post is associated with the tag
+      if (!tag.posts.includes(post._id)) {
+        tag.posts.push(post._id);
+        await tag.save();
+      }
+    }
+
+    // Update the post's tags
+    post.tags = tagIds;
+
     await post.save();
 
     return NextResponse.json(post);
