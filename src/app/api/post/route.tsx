@@ -103,7 +103,7 @@ export async function GET(req: NextRequest) {
       const posts = await Post.find()
       .sort({ date: 'desc' })
       .populate('author')
-      .populate('tags');
+      
   
       if (!posts || posts.length === 0) {
         return NextResponse.json({ message: 'No posts found' }, { status: 404 });
