@@ -1,5 +1,6 @@
-import Post from "../../../models/post";
-import User from "../../../models/user";
+import Post from "@/models/post";
+import User from "@/models/user";
+import Tag from "@/models/tag";
 import { getServerSession } from "next-auth";
 import connectToMongoDB from "../../../lib/db";
 import { NextRequest, NextResponse } from "next/server";
@@ -94,50 +95,52 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
 
 // export default POST;
 
-export async function GET (req: NextRequest) {
-    console.log('here')
+export async function GET(req: NextRequest) {
     try {
-        const { client, bucket } = await connectToMongoDB();
-
-        // Retrieve all posts from the database
-        const posts = await Post.find().populate('author').populate('tags');
-        console.log(posts)
-        if (!posts || posts.length === 0) {
-            return NextResponse.json({ message: 'No posts found' });
-        }
-
-        // Prepare the posts data to include all fields
-        const postsData = posts.map(post => ({
-            id: post._id,
-            title: post.title,
-            content: post.content,
-            imageURL: post.imageURL,
-            author: {
-                id: post.author._id,
-                name: post.author.username,
-                email: post.author.email,
-                avatar: post.author.avatar
-            },
-            date: post.date,
-            createdAt: post.createdAt,
-            updatedAt: post.updatedAt,
-            likes: post.likes,
-            tags: post.tags,
-            views: post.views,
-            comments: post.comments,
-            bookmarks: post.bookmarks
-        }));
-        console.log(postsData);
-
-        return NextResponse.json({
-            status: 'success',
-            data: postsData,
-        }, {
-            status: 200,
-        });
-
+      const { client, bucket } = await connectToMongoDB();
+  
+      // Retrieve all posts from the database
+      const posts = await Post.find().populate('author').populate('tags');
+  
+      if (!posts || posts.length === 0) {
+        return NextResponse.json({ message: 'No posts found' }, { status: 404 });
+      }
+  
+      // Prepare the posts data to include all fields
+      const postsData = posts.map(post => ({
+        id: post._id,
+        title: post.title,
+        content: post.content,
+        imageURL: post.imageURL,
+        author: {
+          id: post.author?._id,
+          name: post.author?.username,
+          email: post.author?.email,
+          avatar: post.author?.avatar
+        },
+        date: post.date,
+        createdAt: post.createdAt,
+        updatedAt: post.updatedAt,
+        likes: post.likes,
+        tags: post.tags,
+        views: post.views,
+        comments: post.comments,
+        bookmarks: post.bookmarks
+      }));
+  
+      return NextResponse.json({
+        status: 'success',
+        data: postsData,
+      }, {
+        status: 200,
+      });
+  
     } catch (error) {
-        return NextResponse.json({ message: 'Error retrieving posts', error: error as unknown as string }, { status: 500 });
+      console.error('Error retrieving posts:', error); // Improved logging
+      return NextResponse.json(
+        { message: 'Error retrieving posts', error }, 
+        { status: 500 }
+      );
     }
-};
+  }
 
