@@ -9,6 +9,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { Readable } from "stream";
 import { createTags } from "@/lib/tags";
 
+console.log("Tag model:", Tag);
+
 // POST /api/post
 // Required fields in body: title
 // Required fields in body: content
@@ -85,8 +87,26 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
       });
       await newItem.save();
       await User.findByIdAndUpdate(user._id, { $push: { posts: newItem._id } });
-      await createTags(tags.split(","), newItem._id);
-      // console.log(newItem);
+      
+      // Handle tags
+      const tagsArray = tags.split(',').map(tag => tag.trim());
+      for (let i = 0; i < tagsArray.length; i++) {
+        const tag = tagsArray[i];
+        const postTag = await Tag.findOneAndUpdate(
+          { name: tag.toLowerCase().trim() },
+          { $addToSet: { posts: newItem._id } },
+          { upsert: true, new: true }
+        );
+      
+        await Post.updateOne(
+          { _id: newItem._id },
+          { $addToSet: { tags: postTag._id } }
+        );
+        console.log(tag)
+      }
+
+      await newItem.save();
+      console.log(newItem);
       return NextResponse.json({ message: "ok" });
     });
     return NextResponse.json({ message: "ok" });
@@ -107,6 +127,7 @@ export async function GET(req: NextRequest) {
     // Retrieve all posts from the database
     const posts = await Post.find()
       .sort({ date: "desc" })
+      .populate("author")
       .populate("tags");
 
     if (!posts || posts.length === 0) {

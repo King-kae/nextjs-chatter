@@ -214,7 +214,9 @@ export default function CreatePost() {
 
       setMessage("Post uploaded successfully!");
 
-      router.push("/allposts");
+      setTimeout(() => {
+        router.push("/allposts");
+      }, 5000);
       setLoading(false);
     } catch (error) {
       console.error("Error uploading post:", error);
