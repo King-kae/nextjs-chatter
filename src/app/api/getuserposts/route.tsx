@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: "User not found" }, { status: 404 });
   }
 
-  await connectToMongoDB();
+  const { client, bucket } = await connectToMongoDB();
 
   try {
     const posts = await Post.find({ author: user._id }).populate('tags');

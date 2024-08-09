@@ -24,11 +24,11 @@ const formatDate = (date: string | number | Date) => {
 const PostCard = (props: any) => {
   const { data: currentUser } = useCurrentUser();
   const userId = currentUser?._id;
-  console.log(userId);
+  // console.log(userId);
   const { title, id, views, image, tags, author, date, titleURL, comments } = props;
-  console.log(tags)
+  // console.log(tags)
   const formattedDate = formatDate(date);
-  console.log(id);
+  // console.log(id);
   return (
     <>
       <div className="bg-white rounded-b-lg">
@@ -41,9 +41,9 @@ const PostCard = (props: any) => {
         <div className="flex gap-x-8 p-8">
           <Avatar seed={author.id} size="small" />
           <AuthorInfo status="preview" author={author} date={formattedDate} />
-          <span><EyeIcon className='h-6 w-6' />{views?.length || 0}</span>
+          <span>{views?.length || 0} View(s)</span>
           {userId === author.id && (
-            <button className="py-2 px-1 bg-black">
+            <button className="px-2 bg-black">
               <Link href={`/allposts/${title}/edit`} className="text-white">Edit</Link>
             </button>
           )}

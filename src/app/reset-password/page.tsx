@@ -5,7 +5,6 @@ import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline"; // Icons for visibility toggle
 
-
 const ResetPasswordPage = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -36,13 +35,12 @@ const ResetPasswordPage = () => {
         token,
         password,
       });
-    
+
       setTimeout(() => {
         setMessage(response.data.message);
         setLoading(false);
-        router.push('/login');
+        router.push("/login");
       }, 8000);
-    
     } catch (err) {
       setError("Failed to reset password. Please try again.");
       setLoading(false);
@@ -50,50 +48,73 @@ const ResetPasswordPage = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <form onSubmit={handleSubmit} className="bg-neutral-950 px-8 py-10 w-3/12">
-        <h1 className="text-4xl font-bold mb-7">Reset Password</h1>
+    <div className="flex justify-center items-center min-h-screen px-4 bg-white">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white border border-gray-300 rounded-lg shadow-lg px-8 py-10 w-full max-w-md"
+      >
+        <h1 className="text-3xl font-semibold mb-6 text-center">
+          Reset Password
+        </h1>
 
-        {message && <div className="bg-green-500 text-white px-4 py-2">{message}</div>}
-        {error && <div className="bg-red-500 text-white px-4 py-2">{error}</div>}
+        {message && (
+          <div className="bg-green-500 text-white px-4 py-2 rounded mb-4 shadow-lg">
+            {message}
+          </div>
+        )}
+        {error && (
+          <div className="bg-red-500 text-white px-4 py-2 rounded mb-4 shadow-lg">
+            {error}
+          </div>
+        )}
 
-        <div className="relative mb-2">
+        <div className="relative mb-4">
           <input
             type={showPassword ? "text" : "password"}
             id="password"
             placeholder="New Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="bg-zinc-800 px-4 py-2 block w-full"
+            className="border border-gray-300 rounded px-4 py-2 mb-4 w-full text-black placeholder-gray-500 focus:ring-2 focus:ring-indigo-500"
           />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute inset-y-0 right-0 px-3 py-2 text-white"
+            className="absolute right-3 top-1/3 transform -translate-y-1/2 text-gray-500"
           >
-            {showPassword ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+            {showPassword ? (
+              <EyeSlashIcon className="h-5 w-5" />
+            ) : (
+              <EyeIcon className="h-5 w-5" />
+            )}
           </button>
         </div>
 
-        <div className="relative mb-2">
+        <div className="relative mb-4">
           <input
             type={showConfirmPassword ? "text" : "password"}
             placeholder="Confirm New Password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="bg-zinc-800 px-4 py-2 block w-full"
+            className="border border-gray-300 rounded px-4 py-2 mb-4 w-full text-black placeholder-gray-500 focus:ring-2 focus:ring-indigo-500"
           />
           <button
             type="button"
             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            className="absolute inset-y-0 right-0 px-3 py-2 text-white"
+            className="absolute right-3 top-1/3 transform -translate-y-1/2 text-gray-500"
           >
-            {showConfirmPassword ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+            {showConfirmPassword ? (
+              <EyeSlashIcon className="h-5 w-5" />
+            ) : (
+              <EyeIcon className="h-5 w-5" />
+            )}
           </button>
         </div>
 
         <button
-          className={`bg-indigo-500 px-4 py-2 w-full ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={`bg-black text-white rounded px-4 py-2 w-full font-semibold transition-opacity duration-200 ${
+            loading ? "opacity-50 cursor-not-allowed" : ""
+          }`}
           type="submit"
           disabled={loading}
         >

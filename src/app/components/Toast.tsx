@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useToast } from "@/app/hook/useToast";
-// import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 
 interface ToastProps {}
 
@@ -32,7 +31,6 @@ const Toast: React.FC<ToastProps> = () => {
     }
   }, [toast, toast.isOpen, toast.onClose]);
 
-//   const handleDrag = (_: DraggableEvent, { deltaY }: DraggableData) => {};
 
   return (
     <div>

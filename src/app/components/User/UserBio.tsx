@@ -15,7 +15,7 @@ export default function UserBio({ params }: { params: { userId: string } }) {
   const { data: user } = useUsers(userId);
   const editModal = useEditModal();
   const { isFollowing, toggleFollow } = useFollow(user?._id || "");
-  console.log(user);
+  // console.log(user);
 
   return (
     <div className="">

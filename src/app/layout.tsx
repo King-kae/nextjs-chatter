@@ -5,6 +5,7 @@ import React from "react";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import Providers from "./QueryProvider/Provider";
+import Toast from "./components/Toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +22,7 @@ export default function RootLayout({
       </head>
       <SessionProvider>
         <Providers>
-          <body className={inter.className}>{children}</body>
+          <body className={inter.className}><Toast />{children}</body>
         </Providers>
       </SessionProvider>
     </html>

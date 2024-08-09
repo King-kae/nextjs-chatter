@@ -10,29 +10,38 @@ import { useQuery } from "@tanstack/react-query";
 import TabSwitcher from "@/app/components/tabs";
 import { fetchUserPosts } from "@/lib/fetchPost";
 import PostList from "@/app/components/PostList/PostList";
+import axios from "axios";
 
+
+const getAllPosts = async () => {
+  try {
+    const response = await axios.get("/api/post");
+    console.log(response.data.data)
+    return response.data.data || [];
+  } catch (error: any) {
+    console.log(error.message);
+    return { error: error.message };
+  }
+};
 export default function UserId({ params }: { params: { userId: string } }) {
   const router = useRouter();
   const { userId } = params;
 
-  const {
-    data: posts,
-    error,
-    isLoading,
-    refetch,
-  } = useQuery({
-    queryKey: ["userPosts"],
-    queryFn: fetchUserPosts,
+  const { isLoading, isError, data, error } = useQuery<any[]>({
+    queryKey: ["posts"],
+    queryFn: getAllPosts,
   });
 
+  const posts = data?.filter((post) => post.author.id === userId);
+  const bookmarks = data?.filter((post) => post.bookmarks.includes(userId));
   const { data: user } = useUsers(userId as string);
 
   const tabs = [
     { label: "Posts", content: <PostList items={posts} /> },
-    { label: "About", content: <div>Content for Tab 2</div> },
+    { label: "Bookmarks", content: <PostList items={bookmarks} /> },
     { label: "Replies", content: <div>Content for Tab 3</div> },
   ];
-  console.log(user);
+  // console.log(user);
 
   return (
     <>
