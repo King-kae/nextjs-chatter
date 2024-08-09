@@ -7,6 +7,7 @@ import { SessionProvider } from "next-auth/react";
 import { ChevronDownIcon, ChevronUpIcon, UserCircleIcon, } from "@heroicons/react/24/outline";
 import Avatar from "../Avatar"
 import useCurrentUser from "@/app/hook/useCurrentUser";
+import { useRegisterModal } from "@/app/hook/useModal";
 
 function UserMenu() {
     const [isOpen, setIsOpen] = useState(false);
@@ -17,6 +18,7 @@ function UserMenu() {
 		signOut();
         router.push("/");
 	};
+    const registerModal = useRegisterModal();
     const router = useRouter();
     return (
         <>
@@ -44,7 +46,7 @@ function UserMenu() {
                                 </a>
                             
                             <button
-                                onClick={handleLogout}
+                                onClick={registerModal.onOpen}
                                 className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                             >
 

@@ -12,10 +12,10 @@ export default function Footer() {
                 <div>
                     <Link href='#'>Contact Us</Link>
                 </div>
-                <div>
+                <div className='max-md:hidden'>
                     <Link href='#'>Privacy Policy</Link>
                 </div>
-                <div>
+                <div className='max-md:hidden'>
                     <Link href='#'>Terms of Service</Link>
                 </div>
                 <div>
