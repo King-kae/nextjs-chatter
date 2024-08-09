@@ -3,6 +3,7 @@
 import React, { useState, useRef } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/app/hook/useToast";
 import { marked } from "marked";
 import {
   BoldIcon,
@@ -35,6 +36,8 @@ export default function CreatePost() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
+
+  const toast = useToast();
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -133,6 +136,7 @@ export default function CreatePost() {
 
       // Check file size (10MB = 10 * 1024 * 1024 bytes)
       if (file.size > 10 * 1024 * 1024) {
+        toast.error("File size exceeds the 10MB limit.");
         setError("File size exceeds the 10MB limit.");
         return;
       } else {
@@ -194,6 +198,7 @@ export default function CreatePost() {
     console.log(markdown);
 
     if (!file || !tags || !title || !markdown) {
+      toast.error("Please fill in all fields and select a file.");
       setMessage("Please fill in all fields and select a file.");
       return;
     }
@@ -212,6 +217,7 @@ export default function CreatePost() {
         },
       });
 
+      toast.success("Post uploaded successfully!");
       setMessage("Post uploaded successfully!");
 
       setTimeout(() => {
@@ -440,10 +446,9 @@ export default function CreatePost() {
           <div className="border border-gray-300 p-2.5 mb-3 rounded-md">
             <h2>Preview</h2>
             <div
-              dangerouslySetInnerHTML={{
-                __html: marked.parse(markdown) as string,
-              }}
-              style={{ lineHeight: "1.5" }}
+              className="markdown-preview"
+              dangerouslySetInnerHTML={{ __html: marked.parse(markdown) as string }}
+              style={{ lineHeight: "1.5", whiteSpace: "pre-wrap" }}  // Added whiteSpace property here
             />
           </div>
           <button
@@ -458,6 +463,13 @@ export default function CreatePost() {
         </form>
         {message && <p>{message}</p>}
         {error && <p className="text-red-500">{error}</p>}
+
+        <style jsx>{`
+          .markdown-preview a {
+            color: blue;
+            text-decoration: underline;
+          }
+        `}</style>
       </div>
     </>
   );

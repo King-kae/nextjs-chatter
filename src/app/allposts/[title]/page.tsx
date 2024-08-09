@@ -130,7 +130,7 @@ export default function PostPage({ params }: PostPageProps) {
       <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
       <PostTags tags={post.tags} />
       <div
-        className="prose max-w-none mb-8"
+        className="prose max-w-none mb-8 markdown-preview"
         dangerouslySetInnerHTML={{ __html: htmlContent as string }}
       />
       <div className="flex items-center space-x-4 mb-8">
