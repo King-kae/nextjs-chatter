@@ -58,7 +58,7 @@ const ForgotPasswordPage = () => {
         )}
   
         <input
-          type="email"
+          type="text"
           id="email"
           placeholder="somemail@example.com"
           value={email}

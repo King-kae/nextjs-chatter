@@ -19,6 +19,8 @@ function LoginPage() {
     const email = formData.get("email");
     const password = formData.get("password");
 
+    console.log(email, password)
+
     const signinResponse = await signIn("credentials", {
       redirect: false,
       email,
@@ -32,7 +34,7 @@ function LoginPage() {
     }
 
     if (signinResponse?.ok) {
-      router.push("/dashboard/profile");
+      router.push("/");
     }
 
     console.log(signinResponse);
@@ -47,12 +49,12 @@ function LoginPage() {
 
         <h1 className="text-3xl font-semibold mb-6 text-center">Log In</h1>
         <input
-          type="email"
+          type="text"
           data-testid='Email'
           placeholder="somemail@example.com"
           name="email"
           className="border border-gray-300 rounded px-4 py-2 mb-4 w-full text-black placeholder-gray-500"
-          required
+          
         />
         <input
           type="password"
@@ -60,7 +62,7 @@ function LoginPage() {
           placeholder="******"
           name="password"
           className="border border-gray-300 rounded px-4 py-2 mb-4 w-full text-black placeholder-gray-500"
-          required
+          
         />
         <div className="text-right text-gray-500 mb-4">
           <a href="/forgot-password" className="underline">Forgot password?</a>
@@ -68,6 +70,7 @@ function LoginPage() {
 
         <button 
           disabled={loginInProgress} 
+          data-testid='Login' 
           className={`bg-black text-white rounded px-4 py-2 w-full ${loginInProgress ? 'opacity-50 cursor-not-allowed' : ''}`}
           type="submit"
         >
