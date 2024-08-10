@@ -123,7 +123,6 @@ const RegisterPage: React.FC = () => {
             />
             <button
               type="button"
-              data-testid='Sign Up'
               className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
               onClick={() => setShowPassword(!showPassword)}
             >
@@ -148,7 +147,7 @@ const RegisterPage: React.FC = () => {
           </div>
         </div>
 
-        <button className="bg-black text-white px-4 py-2 rounded w-full hover:bg-gray-700 transition duration-200" type="submit" disabled={loading}>
+        <button className="bg-black text-white px-4 py-2 rounded w-full hover:bg-gray-700 transition duration-200" type="submit" data-testid='Sign Up' disabled={loading}>
           {loading ? "Signing up..." : "Sign Up"}
         </button>
 
