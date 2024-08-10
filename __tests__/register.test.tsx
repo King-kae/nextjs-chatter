@@ -58,11 +58,17 @@ describe('RegisterPage', () => {
         email: 'test@example.com',
         password: 'password123',
       });
+    });
+    
+    await waitFor(() => {
       expect(mockSignIn).toHaveBeenCalledWith('credentials', {
         redirect: false,
         email: 'test@example.com',
         password: 'password123',
       });
+    });
+    
+    await waitFor(() => {
       expect(mockRouterPush).toHaveBeenCalledWith('/');
     });
   });

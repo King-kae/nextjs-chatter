@@ -107,7 +107,7 @@ const RegisterPage: React.FC = () => {
 
           <div className="relative">
             <input
-              type="email"
+              type="text"
               placeholder="somemail@gmail.com"
               name="email"
               className="bg-gray-200 text-black px-4 py-2 rounded w-full focus:outline-none focus:ring focus:ring-gray-500"

@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
-    "test:watch": "jest --watchAll"
+    "test:watch": "jest --watchAll",
+    "cypress:open": "cypress open"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.4.1",
@@ -53,6 +54,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/uuid": "^10.0.0",
+    "cypress": "^13.13.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
     "eslint-plugin-jest-dom": "^5.4.0",
