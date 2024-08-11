@@ -29,7 +29,8 @@ export async function fetchComments(title: string) {
 
   // src/lib/deletePostByTitle.ts
 export const deletePostByTitle = async (title: string): Promise<void> => {
-    const res = await fetch(`/api/getposts/${title}`, {
+    const url = title ? `/api/post/${title}` : '/api/post';
+    const res = await fetch(url, {
       method: 'DELETE',
     });
   

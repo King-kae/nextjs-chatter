@@ -18,7 +18,7 @@ const getAllPosts = async () => {
 };
 
 export default function ShowAllPosts() {
-  const { isLoading, isError, data, error } = useQuery<any[]>({
+  const { isLoading, isError, data, error , refetch} = useQuery<any[]>({
     queryKey: ["posts"],
     queryFn: getAllPosts,
   });

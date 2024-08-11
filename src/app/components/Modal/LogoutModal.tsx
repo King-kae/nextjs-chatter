@@ -1,12 +1,12 @@
 import React from "react";
-import { useRegisterModal } from "@/app/hook/useModal";
+import { useLogoutModal } from "@/app/hook/useModal";
 import Modal from "../Modal";
 import { signOut } from "next-auth/react";
 import router from "next/router";
 
 
 const LogoutModal: React.FC = () => {
-  const registerModal = useRegisterModal();
+  const logoutModal = useLogoutModal();
 
   const handleLogout = () => {
 		signOut();
@@ -18,8 +18,8 @@ const LogoutModal: React.FC = () => {
       disabled={false}
       title="Log Out"
       actionLabel="Log Out"
-      isOpen={registerModal.isOpen}
-      onClose={registerModal.onClose}
+      isOpen={logoutModal.isOpen}
+      onClose={logoutModal.onClose}
       onSubmit={handleLogout}
       body={
         <div className="flex flex-col gap-y-4">

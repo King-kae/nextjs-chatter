@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { AuthorInfo } from "../AuthorInfo/AuthorInfo";
 import useCurrentUser from "../../hook/useCurrentUser";
 import { PostImage } from "./PostImage";
@@ -7,8 +7,15 @@ import LikeButton from "../LikeButton";
 import BookmarkButton from "../BookmarkButton";
 import { PostTags } from "../PostTags/PostTags";
 import CommentButton from "../CommentButton";
-import { EyeIcon } from "@heroicons/react/24/outline";
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  EyeIcon,
+} from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { useMutation } from "@tanstack/react-query";
+import { deletePostByTitle } from "@/lib/fetchPost";
+import { useToast } from "@/app/hook/useToast";
 
 const formatDate = (date: string | number | Date) => {
   const options: Intl.DateTimeFormatOptions = {
@@ -22,10 +29,20 @@ const formatDate = (date: string | number | Date) => {
 };
 
 const PostCard = (props: any) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const toast = useToast();
+  const mutation = useMutation({
+    mutationFn: deletePostByTitle,
+    onSuccess: async () => {
+      toast.success("Post deleted successfully");
+      // Refetch posts after a successful deletion
+    },
+  });
   const { data: currentUser } = useCurrentUser();
   const userId = currentUser?._id;
   // console.log(userId);
-  const { title, id, views, image, tags, author, date, titleURL, comments } = props;
+  const { title, id, views, image, tags, author, date, titleURL, comments } =
+    props;
   // console.log(tags)
   const formattedDate = formatDate(date);
   // console.log(id);
@@ -43,9 +60,34 @@ const PostCard = (props: any) => {
           <AuthorInfo status="preview" author={author} date={formattedDate} />
           <span>{views?.length || 0} View(s)</span>
           {userId === author.id && (
-            <button className="px-2 bg-black">
-              <Link href={`/allposts/${title}/edit`} className="text-white">Edit</Link>
-            </button>
+            <div className="relative right-0">
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="flex items-center gap-x-2 text-gray-700"
+              >
+                {isOpen ? (
+                  <ChevronUpIcon className="h-4 w-4" />
+                ) : (
+                  <ChevronDownIcon className="h-4 w-4" />
+                )}
+              </button>
+              {isOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+                  <Link
+                    href={`/allposts/${title}/edit`}
+                    className="block text-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Edit
+                  </Link>
+                  <button
+                    onClick={() => mutation.mutate(title)}
+                    className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Delete
+                  </button>
+                </div>
+              )}
+            </div>
           )}
         </div>
         <div className="px-8">

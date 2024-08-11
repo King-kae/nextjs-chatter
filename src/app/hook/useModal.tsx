@@ -14,5 +14,5 @@ const createModalHook = () => create<ModalStore>((set) => ({
 }));
 
 export const useEditModal = createModalHook();
-export const useRegisterModal = createModalHook();
+export const useLogoutModal = createModalHook();
 export const useLoginModal = createModalHook();

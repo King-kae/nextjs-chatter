@@ -31,22 +31,20 @@ const Toast: React.FC<ToastProps> = () => {
     }
   }, [toast, toast.isOpen, toast.onClose]);
 
-
   return (
     <div>
       <div
         className={`fixed bottom-4 right-0 px-5 py-2 text-black bg-white shadow-lg border border-gray-200 rounded-md flex     items-center justify-between gap-2 transition-all duration-300 transform group
                 z-50
-                ${ toast.isOpen
+                ${
+                  toast.isOpen
                     ? "translate-y-0  opacity-100"
-                    : "translate-y-full opacity-0" }`}
+                    : "translate-y-full opacity-0"
+                }`}
         ref={toastRef}
       >
         <p>
-          <span
-            className="font-bold capitalize">
-            {toast.type}
-          </span>
+          <span className="font-bold capitalize">{toast.type}</span>
         </p>
         <p>{toast.message}</p>
         <XMarkIcon

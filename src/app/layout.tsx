@@ -6,7 +6,7 @@ import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import Providers from "./QueryProvider/Provider";
 import Toast from "./components/Toast";
-import { useRegisterModal } from "./hook/useModal";
+import { useLogoutModal } from "./hook/useModal";
 import LogoutModal from "./components/Modal/LogoutModal";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -17,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
 
-  const registerModal = useRegisterModal();
+  const logoutModal = useLogoutModal();
   return (
     <html lang="en">
       <head>
@@ -29,7 +29,7 @@ export default function RootLayout({
           <body className={inter.className}>
             <Toast />
             {children}
-            {registerModal.isOpen && <LogoutModal />} </body>
+            {logoutModal.isOpen && <LogoutModal />} </body>
         </Providers>
       </SessionProvider>
     </html>

@@ -8,7 +8,6 @@ import { authOptions } from "@/utils/authOptions";
 import { NextApiRequest, NextApiResponse } from "next";
 import { Readable } from "stream";
 
-
 // POST /api/post
 // Required fields in body: title
 // Required fields in body: content
@@ -87,7 +86,7 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
       await User.findByIdAndUpdate(user._id, { $push: { posts: newItem._id } });
 
       // Handle tags
-      const tagsArray = tags.split(',').map(tag => tag.trim());
+      const tagsArray = tags.split(",").map((tag) => tag.trim());
       for (let i = 0; i < tagsArray.length; i++) {
         const tag = tagsArray[i];
         const postTag = await Tag.findOneAndUpdate(
@@ -95,12 +94,12 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
           { $addToSet: { posts: newItem._id } },
           { upsert: true, new: true }
         );
-      
+
         await Post.updateOne(
           { _id: newItem._id },
           { $addToSet: { tags: postTag._id } }
         );
-        console.log(tag)
+        console.log(tag);
       }
 
       await newItem.save();
@@ -167,6 +166,49 @@ export async function GET(req: NextRequest) {
     console.error("Error retrieving posts:", error); // Improved logging
     return NextResponse.json(
       { message: "Error retrieving posts", error },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  const session = await getServerSession(authOptions);
+  // console.log(session)
+
+  if (!session) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+  const { title } = await req.json();
+
+  if (!title || typeof title !== "string") {
+    return NextResponse.json({ error: "Invalid title" }, { status: 400 });
+  }
+
+  await connectToMongoDB();
+
+  try {
+    const user = await User.findOne({ email: session.user?.email });
+    if (!user) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
+
+    const post = await Post.findOneAndDelete({ title, author: user._id });
+    await User.findByIdAndDelete(user._id, { $pull: { posts: post._id } });
+
+    if (!post) {
+      return NextResponse.json(
+        { message: "Post not found or unauthorized" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(
+      { message: "Post deleted successfully" },
+      { status: 200 }
+    );
+  } catch {
+    return NextResponse.json(
+      { message: "Error deleting post" },
       { status: 500 }
     );
   }

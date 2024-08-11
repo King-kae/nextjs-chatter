@@ -7,9 +7,20 @@ import GoogleProvider from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 
 export const authOptions: NextAuthOptions = {
+  session: {
+    strategy: "jwt",
+    maxAge: 60 * 60, // 1 hour in seconds
+  },
   callbacks: {
     async jwt({ token, user}) {
-      if (user) token.user = user;
+      if (user) {
+        token.user = {
+          _id: user.id, // Use the `id` field from the returned user data
+          username: user.name, // Also adding username to the token
+          email: user.email, // Adding email to the token
+        };
+       
+      }
       return token;
     },
     async session({ session, token }) {
@@ -32,10 +43,13 @@ export const authOptions: NextAuthOptions = {
 
         const exist_user = await User.findOne({ email: email })
 
-        if (!exist_user) User.create({ email, username, avatar });
+        if (!exist_user) {
+          const newUser = User.create({ email, username, avatar });
+        }
+          
 
         return {
-          id: profile.id,
+          id: exist_user._id.toString(),          
           username,
           email,
           avatar,
@@ -60,7 +74,7 @@ export const authOptions: NextAuthOptions = {
         if (!exist_user) User.create({ email, username, avatar });
 
         return {
-          id: profile.sub,
+          id: exist_user._id.toString(),
           username,
           email,
           avatar,
