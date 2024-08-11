@@ -45,15 +45,10 @@ export const authOptions: NextAuthOptions = {
 
         if (!exist_user) {
           const newUser = User.create({ email, username, avatar });
+          return newUser;
         }
           
-
-        return {
-          id: exist_user._id.toString(),          
-          username,
-          email,
-          avatar,
-        };
+        return exist_user;
       }
     }),
 
@@ -71,14 +66,12 @@ export const authOptions: NextAuthOptions = {
 
         const exist_user = await User.findOne({ email });
 
-        if (!exist_user) User.create({ email, username, avatar });
+        if (!exist_user) {
+          const newUser = User.create({ email, username, avatar });
+          return newUser;
+        }
 
-        return {
-          id: exist_user._id.toString(),
-          username,
-          email,
-          avatar,
-        };
+        return exist_user;
       },
     }),
 
@@ -116,11 +109,7 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Password does not match.");
         }
         // return user object with the their profile data
-        return {
-          id: user._id.toString(),
-          name: user.username,
-          email: user.email,
-        };
+        return user;
       },
     }),
   ],

@@ -3,23 +3,18 @@
 import React, { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { SessionProvider } from "next-auth/react";
 import {
   ChevronDownIcon,
   ChevronUpIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import Avatar from "../Avatar";
-import useCurrentUser from "@/app/hook/useCurrentUser";
 import { useLogoutModal } from "@/app/hook/useModal";
 
 function UserMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const { data: session, status } = useSession();
   // console.log(session)
-  // console.log((session?.user as { _id?: string })?._id)
-  // const { data: currentUser, isLoading } = useCurrentUser();
-  // console.log(currentUser)
   const handleLogout = () => {
     setIsOpen(false);
     signOut();

@@ -2,16 +2,16 @@ import React from "react";
 import { useLogoutModal } from "@/app/hook/useModal";
 import Modal from "../Modal";
 import { signOut } from "next-auth/react";
-import router from "next/router";
-
+import { useRouter } from "next/navigation";
 
 const LogoutModal: React.FC = () => {
+  const router = useRouter();
   const logoutModal = useLogoutModal();
 
   const handleLogout = () => {
-		signOut();
-        router.push("/");
-	};
+    signOut();
+    router.push("/");
+  };
 
   return (
     <Modal
@@ -25,10 +25,10 @@ const LogoutModal: React.FC = () => {
         <div className="flex flex-col gap-y-4">
           <p className="text-sm text-gray-700">
             Are you sure you want to log out?
-          </p>  
+          </p>
         </div>
       }
     />
   );
-}
+};
 export default LogoutModal;

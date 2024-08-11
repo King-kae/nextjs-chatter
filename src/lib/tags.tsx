@@ -23,8 +23,4 @@ export async function createTags (tags: string[], postId: string) {
   }
 };
 
-// Example usage
-// const tags = ['JavaScript', 'React', 'Next.js'];
-// const postId = 'some-post-id';
 
-// createTags(tags, postId);
