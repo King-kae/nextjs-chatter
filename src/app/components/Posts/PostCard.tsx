@@ -10,8 +10,8 @@ import CommentButton from "../CommentButton";
 import {
   ChevronDownIcon,
   ChevronUpIcon,
-  EyeIcon,
 } from "@heroicons/react/24/outline";
+import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useMutation } from "@tanstack/react-query";
 import { deletePostByTitle } from "@/lib/fetchPost";
@@ -30,18 +30,20 @@ const formatDate = (date: string | number | Date) => {
 
 const PostCard = (props: any) => {
   const [isOpen, setIsOpen] = useState(false);
+  const queryClient = useQueryClient(); 
   const toast = useToast();
   const mutation = useMutation({
     mutationFn: deletePostByTitle,
     onSuccess: async () => {
       toast.success("Post deleted successfully");
       // Refetch posts after a successful deletion
+      queryClient.invalidateQueries({ queryKey: ['posts']});
     },
   });
   const { data: currentUser } = useCurrentUser();
   const userId = currentUser?._id;
   // console.log(userId);
-  const { title, id, views, image, tags, author, date, titleURL, comments } =
+  const { title, views, image, tags, author, date, titleURL, comments } =
     props;
   // console.log(tags)
   const formattedDate = formatDate(date);
