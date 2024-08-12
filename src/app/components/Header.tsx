@@ -47,7 +47,7 @@ export default function Header() {
           <a href="#"  className="text-sm font-semibold leading-6 text-gray-900">
             Product
           </a>
-          <a href="post" className="text-sm font-semibold leading-6 text-gray-900">
+          <a href="/post" className="text-sm font-semibold leading-6 text-gray-900">
             Write
           </a>
           <a href="/allposts" className="text-sm font-semibold leading-6 text-gray-900">
@@ -87,7 +87,7 @@ export default function Header() {
             <div className="-my-6 divide-y divide-gray-500/10">
               <div className="space-y-2 py-6">
                 <a
-                  href="post"
+                  href="/post"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   Write

@@ -17,7 +17,8 @@ const LogoutModal: React.FC = () => {
     <Modal
       disabled={false}
       title="Log Out"
-      actionLabel="Log Out"
+      actionLabel="Yes"
+      deactionLabel="No"
       isOpen={logoutModal.isOpen}
       onClose={logoutModal.onClose}
       onSubmit={handleLogout}

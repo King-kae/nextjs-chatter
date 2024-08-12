@@ -11,9 +11,8 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
 } from "@heroicons/react/24/outline";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 import Link from "next/link";
-import { useMutation } from "@tanstack/react-query";
 import { deletePostByTitle } from "@/lib/fetchPost";
 import { useToast } from "@/app/hook/useToast";
 

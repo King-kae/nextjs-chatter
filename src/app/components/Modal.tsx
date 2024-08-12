@@ -10,6 +10,7 @@ interface ModalProps {
   body: string | JSX.Element;
   footer?: string | JSX.Element;
   actionLabel: string;
+  deactionLabel: string;
   disabled: boolean;
 }
 
@@ -21,6 +22,7 @@ export default function Modal({
   body,
   footer,
   actionLabel,
+  deactionLabel,
   disabled,
 }: ModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
@@ -66,13 +68,19 @@ export default function Modal({
             </button>
           </div>
           <div className="relative px-10 pt-7 flex-auto">{body}</div>
-          <div className="flex flex-col gap-2 px-10 pt-7 pb-7">
+          <div className="flex justify-between space-x-4 w-full gap-2 px-10 pt-7 pb-7">
             <button
-              className="text-white bg-black hover:bg-white hover:text-black disabled:opacity-50 disabled:cursor-not-allowed p-2 rounded"
+              className="text-white w-full bg-black hover:bg-white hover:text-black disabled:opacity-50 disabled:cursor-not-allowed p-2 rounded"
               onClick={handleSend}
               disabled={disabled}
             >
               {actionLabel}
+            </button>
+            <button
+             onClick={handleClose}
+             className="text-white w-full bg-black hover:bg-white hover:text-black disabled:opacity-50 disabled:cursor-not-allowed p-2 rounded"
+            >
+              {deactionLabel}
             </button>
             {footer}
           </div>

@@ -9,7 +9,7 @@ import Credentials from "next-auth/providers/credentials";
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
-    maxAge: 60 * 60, // 1 hour in seconds
+    maxAge: 2 * 60 * 60, // 1 hour in seconds
   },
   callbacks: {
     async jwt({ token, user}) {

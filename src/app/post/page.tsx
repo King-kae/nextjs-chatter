@@ -20,6 +20,7 @@ import {
   MinusIcon,
   TableCellsIcon,
   VideoCameraIcon,
+  ArrowLeftCircleIcon,
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Loader from "@/app/components/Loader";
@@ -119,7 +120,10 @@ export default function CreatePost() {
         const imageURL = response.data.fileURL;
         // Replace placeholder with actual markdown image syntax
         setMarkdown((prevMarkdown) =>
-          prevMarkdown.replace("Upload in progress...", `![Image description](${imageURL})`)
+          prevMarkdown.replace(
+            "Upload in progress...",
+            `![Image description](${imageURL})`
+          )
         );
         setLoading(false);
       } catch (error) {
@@ -233,7 +237,12 @@ export default function CreatePost() {
   return (
     <>
       <div className="max-w-3xl mx-auto p-5 bg-gray-300 box-border">
-        <h1 className="text-center mb-5">Create Post</h1>
+        <div className="flex items-center justify-between mb-5">
+          <button onClick={() => router.back()} className="flex items-center">
+            <ArrowLeftCircleIcon className="h-6 w-6" />
+          </button>
+          <h1 className="text-center flex-1">Create Post</h1>
+        </div>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="image">
@@ -307,7 +316,7 @@ export default function CreatePost() {
               placeholder="Enter the title of your post"
             />
           </div>
-          <div>
+          <div style={{ marginBottom: "15px" }}>
             <label htmlFor="tags">Tags</label>
             <input
               type="text"
@@ -449,13 +458,15 @@ export default function CreatePost() {
             <h2>Preview</h2>
             <div
               className="markdown-preview"
-              dangerouslySetInnerHTML={{ __html: marked.parse(markdown) as string }}
-              style={{ lineHeight: "1.5", whiteSpace: "pre-wrap" }}  // Added whiteSpace property here
+              dangerouslySetInnerHTML={{
+                __html: marked.parse(markdown) as string,
+              }}
+              style={{ lineHeight: "1.5", whiteSpace: "pre-wrap" }} // Added whiteSpace property here
             />
           </div>
           <button
             type="submit"
-            data-testid='Upload Post' 
+            data-testid="Upload Post"
             className={
               "hover:bg-white px-5 py-2.5 text-base text-white bg-black rounded-md transition-colors duration-300 hover:text-black cursor-pointer `${loading ? 'opacity-50 cursor-not-allowed' : ''}`"
             }

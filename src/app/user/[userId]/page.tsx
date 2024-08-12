@@ -11,6 +11,7 @@ import TabSwitcher from "@/app/components/tabs";
 import { fetchUserPosts } from "@/lib/fetchPost";
 import PostList from "@/app/components/PostList/PostList";
 import axios from "axios";
+import Header from "@/app/components/Header";
 
 
 const getAllPosts = async () => {
@@ -48,6 +49,7 @@ export default function UserId({ params }: { params: { userId: string } }) {
       <Head>
         <title>{user?.userId}</title>
       </Head>
+      <Header />
       <div className="relative pb-5">
         <div className=" w-full h-40">
           <Image

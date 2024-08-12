@@ -253,8 +253,8 @@ export default function EditPostPage({
     mutation.mutate();
   };
 
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  if (isLoading) return <p className="flex justify-center items-center h-screen">Loading...</p>;
+  if (error) return <p className="flex justify-center items-center h-screen">Error: {error.message}</p>;
 
   return (
     <>

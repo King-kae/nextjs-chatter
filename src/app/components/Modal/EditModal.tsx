@@ -117,6 +117,7 @@ const EditModal: React.FC = () => {
       isOpen={editModal.isOpen}
       title="Edit your profile"
       actionLabel="Save"
+      deactionLabel="Cancel"
       onClose={editModal.onClose}
       onSubmit={onSubmit}
       body={
