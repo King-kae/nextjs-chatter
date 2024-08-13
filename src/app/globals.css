@@ -10,6 +10,10 @@
     color:rgb(85, 85, 241) !important;
     text-decoration: underline !important;
   }
+  .markdown-preview ul{
+    list-style-type: disc;
+    margin-left: 16px;
+  }
 }
 
 :root {
