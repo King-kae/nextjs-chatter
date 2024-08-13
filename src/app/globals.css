@@ -14,6 +14,9 @@
     list-style-type: disc;
     margin-left: 16px;
   }
+  .markdown-preview ol{
+    margin-left: 16px;
+  }
 }
 
 :root {
