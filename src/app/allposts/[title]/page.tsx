@@ -152,53 +152,57 @@ export default function PostPage({ params }: PostPageProps) {
           width={800}
           height={400}
         />
-        <div className="flex items-center gap-x-4 p-4 bg-white shadow rounded-md">
+        <div className="flex items-start gap-x-4 p-4 bg-white shadow rounded-md">
           <Avatar seed={post.author._id} size="small" />
           <AuthorInfo
             status="preview"
             author={post.author}
             date={formattedDate}
           />
-          <span>{post.views.length || 0} View(s)</span>
-          {userId === post.author._id && (
-            <div className="relative right-0">
-              <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-x-2 text-gray-700"
-              >
-                {isOpen ? (
-                  <ChevronUpIcon className="h-4 w-4" />
-                ) : (
-                  <ChevronDownIcon className="h-4 w-4" />
+          <span className="text-xs">{post.views.length || 0} View(s)</span>
+          <div className="ml-auto relative">
+            {userId === post.author._id && (
+              <div className="relative right-0">
+                <button
+                  onClick={() => setIsOpen(!isOpen)}
+                  className="flex items-center gap-x-2 text-gray-700"
+                >
+                  {isOpen ? (
+                    <ChevronUpIcon className="h-4 w-4" />
+                  ) : (
+                    <ChevronDownIcon className="h-4 w-4" />
+                  )}
+                </button>
+                {isOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+                    <Link
+                      href={`/allposts/${title}/edit`}
+                      className="block text-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Edit
+                    </Link>
+                    <button
+                      onClick={() => mutation.mutate(title)}
+                      className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 )}
-              </button>
-              {isOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
-                  <Link
-                    href={`/allposts/${title}/edit`}
-                    className="block text-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Edit
-                  </Link>
-                  <button
-                    onClick={() => mutation.mutate(title)}
-                    className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Delete
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
+              </div>
+            )}
+          </div>
         </div>
 
-        <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
+        <div className="flex justify-center">
+          <h1 className="text-3xl font-bold my-4">{post.title}</h1>
+        </div>
         <PostTags tags={post.tags} />
         <div
           className="prose max-w-none mb-8 markdown-preview"
           dangerouslySetInnerHTML={{ __html: htmlContent as string }}
         />
-        <div className="flex items-center space-x-4 mb-8">
+        <div className="flex  justify-between mt-2 items-center space-x-4 mb-8">
           <LikeButton initialTitle={post.title} />
           <BookmarkButton initialTitle={post.title} />
           <ShareButton titleURL={post.titleURL} title={post.title} />

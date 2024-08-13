@@ -60,8 +60,9 @@ const PostCard = (props: any) => {
         <div className="flex gap-x-8 p-8">
           <Avatar seed={author.id} size="small" />
           <AuthorInfo status="preview" author={author} date={formattedDate} />
-          <span>{views?.length || 0} View(s)</span>
-          {userId === author.id && (
+          <span className="text-xs">{views?.length || 0} View(s)</span>
+         <div className="ml-auto relative">
+         {userId === author.id && (
             <div className="relative right-0">
               <button
                 onClick={() => setIsOpen(!isOpen)}
@@ -91,13 +92,14 @@ const PostCard = (props: any) => {
               )}
             </div>
           )}
+         </div>
         </div>
-        <div className="px-8">
+        <div className="px-8 mt-4">
           <Link href={`/allposts/${title}`} className="title-link">
             <h2 className="hover:text-blue-500 cursor-pointer">{title}</h2>
           </Link>
           <PostTags tags={tags} />
-          <div className="flex pb-4">
+          <div className="flex justify-between mt-2 pb-4">
             <CommentButton comments={comments} initialTitle={title} />
             <LikeButton initialTitle={title} />
             <BookmarkButton initialTitle={title} />
