@@ -139,7 +139,7 @@ export default function PostPage({ params }: PostPageProps) {
     );
   }
 
-  const htmlContent = marked.parse(post.content);
+  const htmlContent = marked.parse(post?.content);
 
   return (
     <>

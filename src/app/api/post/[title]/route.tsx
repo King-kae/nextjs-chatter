@@ -16,9 +16,9 @@ export async function GET(
 
   const session = await getServerSession(authOptions);
   
-  if (!session) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-  }
+  // if (!session) {
+  //   return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  // }
 
   const { title } = params;
 
@@ -30,10 +30,10 @@ export async function GET(
   
   try {
     
-    const user = await User.findOne({ email: session.user?.email });
-    if (!user) {
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
-    }
+    const user = await User.findOne({ email: session?.user?.email });
+    // if (!user) {
+    //   return NextResponse.json({ message: "User not found" }, { status: 404 });
+    // }
     
     const post = await Post.findOne({ title }).populate("author").populate("tags");
     

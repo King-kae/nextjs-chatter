@@ -3,6 +3,7 @@
 import axios, { AxiosError } from "axios";
 import React, { FormEvent, useState } from "react";
 import { signIn } from 'next-auth/react';
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 import GoogleButton from "@/app/components/common/GoogleButton";
@@ -16,6 +17,12 @@ const RegisterPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
   const router = useRouter();
+  const { data: session } = useSession();
+
+  if (session) {
+    router.push("/");
+    return null; // Prevent rendering the form
+  }
 
   // Define the Joi schema for form validation
   const schema = Joi.object({

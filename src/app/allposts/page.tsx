@@ -12,7 +12,9 @@ export default function getAllPosts() {
         <>
             <Header />
             <div className="bg-neutral-100 h-full">
-                <h1>All Posts</h1>
+                <div className="flex justify-center p-3">
+                    <h1 className="text-xl">All Posts</h1>
+                </div>
                 <ShowAllPosts />
             </div>
         </>

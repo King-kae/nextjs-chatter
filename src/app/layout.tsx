@@ -22,6 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <title>Chatter App</title>
+        <link rel="icon" href="/logo.jpg" />
         <meta name="description" content="A Chattable App" />
       </head>
       <SessionProvider>

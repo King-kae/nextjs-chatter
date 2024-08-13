@@ -5,11 +5,19 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import GitHubButton from "@/app/components/common/GithubButton";
 import GoogleButton from "@/app/components/common/GoogleButton"
+import { useSession } from "next-auth/react";
 
 function LoginPage() {
   const [error, setError] = useState("");
   const [loginInProgress, setLoginInProgress] = useState(false);
   const router = useRouter();
+  const { data: session } = useSession();
+
+
+  if (session) {
+    router.push("/");
+    return null; // Prevent rendering the form
+  }
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

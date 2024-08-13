@@ -17,6 +17,10 @@
   .markdown-preview ol{
     margin-left: 16px;
   }
+
+  .post__image > img {
+    width: 100%;
+  }
 }
 
 :root {

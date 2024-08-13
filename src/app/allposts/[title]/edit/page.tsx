@@ -20,6 +20,7 @@ import {
 } from "@heroicons/react/24/outline";
 import axios from "axios";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 
 // interface EditPostProps {
 //     post: {
@@ -46,6 +47,12 @@ export default function EditPostPage({
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const { data: session, status } = useSession();
+
+  if (status === "unauthenticated") {
+    router.push("/login"); // Redirect to login if unauthenticated
+  }
 
   const getPost = async (title: string) => {
     const response = await fetch(`/api/post/${title}`);

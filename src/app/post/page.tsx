@@ -24,6 +24,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Loader from "@/app/components/Loader";
+import { useSession } from "next-auth/react";
 
 export default function CreatePost() {
   const [file, setFile] = useState<File | null>(null);
@@ -37,6 +38,12 @@ export default function CreatePost() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
+
+  const {data: session, status} = useSession();
+
+  if (status === "unauthenticated") {
+    router.push("/login"); // Redirect to login if unauthenticated
+  }
 
   const toast = useToast();
 
