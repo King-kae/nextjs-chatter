@@ -80,7 +80,7 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
         content,
         author: user._id,
         imageURL: imageURL,
-        titleURL: `${process.env.NEXTAUTH_URL}/${session.user?.name}/${title}`,
+        titleURL: `${process.env.NEXTAUTH_URL}/allposts/${title}`,
       });
       await newItem.save();
       await User.findByIdAndUpdate(user._id, { $push: { posts: newItem._id } });

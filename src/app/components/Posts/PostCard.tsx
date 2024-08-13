@@ -15,6 +15,7 @@ import { useQueryClient, useMutation } from "@tanstack/react-query";
 import Link from "next/link";
 import { deletePostByTitle } from "@/lib/fetchPost";
 import { useToast } from "@/app/hook/useToast";
+import ShareButton from "../ShareButton";
 
 const formatDate = (date: string | number | Date) => {
   const options: Intl.DateTimeFormatOptions = {
@@ -100,6 +101,7 @@ const PostCard = (props: any) => {
             <CommentButton comments={comments} initialTitle={title} />
             <LikeButton initialTitle={title} />
             <BookmarkButton initialTitle={title} />
+            <ShareButton titleURL={titleURL} title={title} />
           </div>
         </div>
       </div>

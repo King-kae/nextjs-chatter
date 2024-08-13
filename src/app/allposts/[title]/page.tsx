@@ -20,6 +20,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/app/hook/useToast";
 import Header from "@/app/components/Header";
+import ShareButton from "@/app/components/ShareButton";
 
 interface PostPageProps {
   params: { title: string };
@@ -200,6 +201,7 @@ export default function PostPage({ params }: PostPageProps) {
         <div className="flex items-center space-x-4 mb-8">
           <LikeButton initialTitle={post.title} />
           <BookmarkButton initialTitle={post.title} />
+          <ShareButton titleURL={post.titleURL} title={post.title} />
         </div>
 
         {session && (
