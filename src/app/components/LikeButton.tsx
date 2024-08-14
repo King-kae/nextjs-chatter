@@ -2,12 +2,22 @@ import React from 'react';
 import { useLike } from '../hook/useLike'; // Update the path according to your project structure
 import { HeartIcon as HeartIconOutline } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
+import { useSession } from 'next-auth/react';
+import { useLoginModal } from '../hook/useModal';
 
 const LikeButton = ({ initialTitle }: { initialTitle: string }) => {
   const { liked, likeCount, loading, toggleLike } = useLike(initialTitle);
+  const { data: session } = useSession();
+  const loginModal = useLoginModal()
 
   const handleLikeClick = () => {
-    toggleLike();
+    if(!session) {
+      console.log('outside')
+      loginModal.onOpen()
+    } else{
+      console.log('inside')
+      toggleLike();
+    }
   };
 
   return (

@@ -10,10 +10,6 @@ import User from '../../../../models/user';
 export async function POST(req: NextRequest) {
     const session = await getServerSession(authOptions);
 
-    if (!session) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
     const { title } = await req.json();
 
     if (!title || typeof title !== 'string') {
@@ -27,6 +23,10 @@ export async function POST(req: NextRequest) {
 
         if (!post) {
             return NextResponse.json({ error: 'Post not found' }, { status: 404 });
+        }
+
+        if (!session) {
+            return NextResponse.json({ bookmarked: false, bookmarkCount: post.bookmarks.length }, { status: 200 });
         }
 
         const user = await User.findOne({ email: session.user?.email });

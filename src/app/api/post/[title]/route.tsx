@@ -13,42 +13,39 @@ export async function GET(
   req: NextRequest,
   { params }: { params: { title: string } }
 ) {
-
+  // Check if the user is authenticated
   const session = await getServerSession(authOptions);
-  
-  // if (!session) {
-  //   return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-  // }
 
   const { title } = params;
 
   if (!title) {
     return NextResponse.json({ message: "Title is required" }, { status: 400 });
   }
-  
+
   const { client } = await connectToMongoDB();
-  
+
   try {
-    
-    const user = await User.findOne({ email: session?.user?.email });
-    // if (!user) {
-    //   return NextResponse.json({ message: "User not found" }, { status: 404 });
-    // }
-    
+    // Fetch the post based on the title
     const post = await Post.findOne({ title }).populate("author").populate("tags");
-    
+
     if (!post) {
       return NextResponse.json({ message: "Post not found" }, { status: 404 });
     }
-    
-    const userId = user._id;
-    
-    const userHasViewed = post.views.includes(userId);
-    
-    console.log("right here")
-    if (!userHasViewed) {
-      post.views.push(userId);
-      await post.save();
+
+    // If the user is authenticated, update the views
+    if (session) {
+      const user = await User.findOne({ email: session.user?.email });
+      if (!user) {
+        return NextResponse.json({ message: "User not found" }, { status: 404 });
+      }
+
+      const userId = user._id;
+      const userHasViewed = post.views.includes(userId);
+
+      if (!userHasViewed) {
+        post.views.push(userId);
+        await post.save();
+      }
     }
 
     return NextResponse.json(post);

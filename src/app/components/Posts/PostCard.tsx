@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { AuthorInfo } from "../AuthorInfo/AuthorInfo";
-import useCurrentUser from "../../hook/useCurrentUser";
 import { PostImage } from "./PostImage";
 import Avatar from "../Avatar";
 import LikeButton from "../LikeButton";
@@ -16,6 +15,7 @@ import Link from "next/link";
 import { deletePostByTitle } from "@/lib/fetchPost";
 import { useToast } from "@/app/hook/useToast";
 import ShareButton from "../ShareButton";
+import { useSession } from "next-auth/react";
 
 const formatDate = (date: string | number | Date) => {
   const options: Intl.DateTimeFormatOptions = {
@@ -32,6 +32,7 @@ const PostCard = (props: any) => {
   const [isOpen, setIsOpen] = useState(false);
   const queryClient = useQueryClient(); 
   const toast = useToast();
+  const { data: session } = useSession()
   const mutation = useMutation({
     mutationFn: deletePostByTitle,
     onSuccess: async () => {
@@ -40,9 +41,9 @@ const PostCard = (props: any) => {
       queryClient.invalidateQueries({ queryKey: ['posts']});
     },
   });
-  const { data: currentUser } = useCurrentUser();
-  const userId = currentUser?._id;
-  // console.log(userId);
+  
+  const userId = session?.user as { _id?: string }
+  
   const { title, views, image, tags, author, date, titleURL, comments } =
     props;
   // console.log(tags)

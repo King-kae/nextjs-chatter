@@ -10,10 +10,6 @@ import User from '../../../../models/user';
 export async function POST(req: NextRequest) {
     const session = await getServerSession(authOptions);
 
-    if (!session) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
     const { title } = await req.json();
 
     if (!title || typeof title !== 'string') {
@@ -29,6 +25,13 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Post not found' }, { status: 404 });
         }
 
+        // Handle the case where the user is not logged in
+        if (!session) {
+            // Return only the like count if the user is not logged in
+            return NextResponse.json({ liked: false, likeCount: post.likes.length }, { status: 200 });
+        }
+
+        // If the user is logged in, check if they liked the post
         const user = await User.findOne({ email: session.user?.email });
         if (!user) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
