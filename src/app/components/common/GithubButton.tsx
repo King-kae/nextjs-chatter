@@ -5,11 +5,9 @@ import { signIn } from "next-auth/react";
 // import { domain_url } from "../../lib/axiosInstance";
 
 const GitHubSigninButton = () => {
-  const callbackUrl = window.location.pathname
-
   function handleGitHubSignin() {
     signIn("github", {
-      callbackUrl: callbackUrl,
+      callbackUrl: '/',
     });
   }
 
