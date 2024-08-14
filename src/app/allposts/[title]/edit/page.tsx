@@ -17,6 +17,7 @@ import {
   H1Icon,
   CodeBracketSquareIcon,
   VideoCameraIcon,
+  ArrowLeftCircleIcon,
 } from "@heroicons/react/24/outline";
 import axios from "axios";
 import Image from "next/image";
@@ -273,7 +274,12 @@ export default function EditPostPage({
           backgroundColor: "#ccc",
         }}
       >
-        <h1>Edit Post</h1>
+        <div className="flex items-center justify-between mb-5">
+          <button onClick={() => router.back()} className="flex items-center">
+            <ArrowLeftCircleIcon className="h-6 w-6" />
+          </button>
+          <h1 className="text-center flex-1">Edit Post</h1>
+        </div>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="image">Cover Image:</label>
