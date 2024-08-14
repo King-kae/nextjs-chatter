@@ -10,7 +10,7 @@ import Avatar from "@/app/components/Avatar";
 import LikeButton from "@/app/components/LikeButton";
 import BookmarkButton from "@/app/components/BookmarkButton";
 import { marked } from "marked";
-import useCurrentUser from "@/app/hook/useCurrentUser";
+// import useCurrentUser from "@/app/hook/useCurrentUser";
 import { AuthorInfo } from "@/app/components/AuthorInfo/AuthorInfo";
 import Image from "next/image";
 import { deletePostByTitle } from "@/lib/fetchPost";
@@ -70,14 +70,15 @@ export default function PostPage({ params }: PostPageProps) {
   });
   const { title } = params;
   const { data: session } = useSession();
-  const { data: currentUser } = useCurrentUser();
+  // const { data: currentUser } = useCurrentUser();
 
-  const userId = currentUser?._id;
+  const userId = session?.user as { _id?: string }
 
-  console.log(currentUser);
+  // const userId = currentUser?._id;
 
-  const formattedDate = formatDate(currentUser?.createdAt);
+  // console.log(currentUser);
 
+  
   // Fetch post data
   const {
     data: post,
@@ -87,9 +88,9 @@ export default function PostPage({ params }: PostPageProps) {
     queryKey: ["post", title],
     queryFn: () => fetchPost(title),
   });
-
+  
   console.log(post);
-
+  
   // Fetch comments data
   const {
     data: comments,
@@ -111,18 +112,19 @@ export default function PostPage({ params }: PostPageProps) {
         },
         body: JSON.stringify({ content }),
       });
-
+      
       if (!res.ok) {
         throw new Error("Error posting comment");
       }
-
+      
       await res.json();
       refetch(); // Optionally, refetch comments if needed
     } catch (err: any) {
       console.error("Error posting comment:", err.message);
     }
   };
-
+  
+  const formattedDate = formatDate(post?.date);
   if (postLoading || commentsLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
