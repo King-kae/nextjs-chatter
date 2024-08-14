@@ -18,8 +18,31 @@
     margin-left: 24px;
   }
 
+  .markdown-preview img{
+    max-width: 100%;
+    height: auto;
+    margin: 1rem auto;
+  }
+  .markdown-preview video{
+    min-width: 20rem;
+    max-width: 40rem;
+    height: 20rem;
+    margin: auto;
+  }
   .post__image > img {
     width: 100%;
+  }
+  @media (min-width: 1024px) {
+
+    .container {
+      max-width: 768px !important;
+    }
+  }
+  @media (min-width: 1280px) {
+  
+    .container {
+      max-width: 768px !important;
+    }
   }
 }
 
