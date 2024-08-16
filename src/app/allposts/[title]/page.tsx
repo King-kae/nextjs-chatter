@@ -76,6 +76,7 @@ export default function PostPage({ params }: PostPageProps) {
   const { data: session } = useSession();
 
   const userId = session?.user as { _id?: string }
+  const userEmail = session?.user?.email
 
   
   // Fetch post data
@@ -90,11 +91,9 @@ export default function PostPage({ params }: PostPageProps) {
       console.log(response.data)
       return response.data
     },
-    refetchOnWindowFocus: false, 
-    staleTime: 1000 * 60 * 5,
   });
   
-  // console.log(post);
+  console.log(post?.author?.email);
   
   // Fetch comments data
   const {
@@ -168,7 +167,7 @@ export default function PostPage({ params }: PostPageProps) {
           />
           <span className="text-xs">{post.views.length || 0} View(s)</span>
           <div className="ml-auto relative">
-            {userId === post.author._id && (
+            {userEmail === post.author.email && (
               <div className="relative right-0">
                 <button
                   onClick={() => setIsOpen(!isOpen)}
@@ -246,23 +245,3 @@ export default function PostPage({ params }: PostPageProps) {
     </>
   );
 }
-
-
-// "use client"
-
-// import React from "react"
-// import PostPage from "../../components/SinglePost/Post"
-
-
-
-// export default function singlePost({ params }: { params: { title: string } }) {
-
-//   const { title } = params
-//   console.log(title)
-
-//   return (
-//     <>
-//       <PostPage title={title} />
-//     </>
-//   )
-// }
