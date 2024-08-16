@@ -192,7 +192,7 @@ export default function EditPostPage({
           prevMarkdown.replace(
             "Upload in progress...",
             `<video controls height="600">
-             <source src="${videoURL}" type="video/mp4"></video>`
+             <source src="${videoURL}" type="video/mp4">Your browser does not support the video tag</video>`
           )
         );
         setLoading(false);
