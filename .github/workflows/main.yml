@@ -2,24 +2,40 @@ name: Tests
 
 on: push
 
+
 jobs:
-  cypress-run:
+  e2e:
     runs-on: ubuntu-22.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout 🛎
+        uses: actions/checkout@v2
 
       - name: Install PNPM
         run: npm i -g pnpm
 
       - name: Install & Build
         run: pnpm i  &&  pnpm build
-
+        
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
           build: pnpm run build
           start: pnpm start
+
+      - name: Run Jest tests
+        run: pnpm test
+
+  unit:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@v2
+
+      - name: Install PNPM
+        run: npm i -g pnpm
+
+      - name: Install & Build
+        run: pnpm i  &&  pnpm build
 
       - name: Run Jest tests
         run: pnpm test
