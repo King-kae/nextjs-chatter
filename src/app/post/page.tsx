@@ -231,9 +231,9 @@ export default function CreatePost() {
       toast.success("Post uploaded successfully!");
       setMessage("Post uploaded successfully!");
 
+      router.push("/allposts");
       setTimeout(() => {
-        router.push("/allposts");
-      }, 2000);
+      }, 1000);
       setLoading(false);
     } catch (error) {
       console.error("Error uploading post:", error);
