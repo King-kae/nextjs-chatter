@@ -17,6 +17,11 @@ describe('Login Page', () => {
     cy.get('input[name="password"]').clear().type('123');
     cy.get('[data-testid="Login"]').click();
 
+     // Mock the API response
+    cy.intercept('POST', '/api/auth/login', {
+      statusCode: 401,
+    }).as('loginUser');
+
     // Check for validation error messages
     cy.contains('User not found').should('be.visible');
   });
@@ -30,7 +35,6 @@ describe('Login Page', () => {
     // Mock the API response
     cy.intercept('POST', '/api/auth/login', {
       statusCode: 401,
-      body: { error: 'Password does not match.' },
     }).as('loginUser');
 
     cy.get('[data-testid="Login"]').click();

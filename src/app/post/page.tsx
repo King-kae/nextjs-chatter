@@ -233,7 +233,7 @@ export default function CreatePost() {
 
       setTimeout(() => {
         router.push("/allposts");
-      }, 3000);
+      }, 2000);
       setLoading(false);
     } catch (error) {
       console.error("Error uploading post:", error);

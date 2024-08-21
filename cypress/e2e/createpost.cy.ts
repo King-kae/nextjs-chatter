@@ -48,7 +48,7 @@ describe('Create Post Page', () => {
         // Mock the API response for the post submission
         cy.intercept('POST', '/api/post', {
           statusCode: 200,
-          body: { message: 'Post uploaded successfully!' }
+          body: {}
         }).as('postUpload');
 
 
