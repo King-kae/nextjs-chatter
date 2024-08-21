@@ -8,10 +8,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      # Install npm dependencies, cache them correctly
-      # and run all Cypress tests
+      - name: Install PNPM
+        run: npm i -g pnpm
+      - name: Install & Build
+        run: pnpm i  &&  pnpm build
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          build: npm run build
-          start: npm start
+          build: pnpm run build
+          start: pnpm start
