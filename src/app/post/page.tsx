@@ -24,7 +24,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Loader from "@/app/components/Loader";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 
 export default function CreatePost() {
   const [file, setFile] = useState<File | null>(null);
@@ -39,11 +39,11 @@ export default function CreatePost() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
 
-  const {data: session, status} = useSession();
+  // const {data: session, status} = useSession();
 
-  if (status === "unauthenticated") {
-    router.push("/login"); // Redirect to login if unauthenticated
-  }
+  // if (status === "unauthenticated") {
+  //   router.push("/login"); // Redirect to login if unauthenticated
+  // }
 
   const toast = useToast();
 
@@ -233,7 +233,7 @@ export default function CreatePost() {
 
       setTimeout(() => {
         router.push("/allposts");
-      }, 5000);
+      }, 3000);
       setLoading(false);
     } catch (error) {
       console.error("Error uploading post:", error);

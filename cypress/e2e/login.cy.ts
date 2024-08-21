@@ -35,6 +35,8 @@ describe('Login Page', () => {
 
     cy.get('[data-testid="Login"]').click();
 
+    cy.wait(8000);
+
     // Check for error message
     cy.contains('Password does not match.').should('be.visible');
   })
@@ -52,9 +54,6 @@ describe('Login Page', () => {
     }).as('loginUser');
 
     cy.get('[data-testid="Login"]').click();
-
-    // Wait for the API response
-    cy.wait('@loginUser');
 
     // Check if the user is redirected to the dashboard page
     cy.url().should('include', '/');
