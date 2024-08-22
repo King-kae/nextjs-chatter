@@ -28,8 +28,6 @@ jobs:
           build: pnpm run build
           start: pnpm start
 
-      - name: Run Jest tests
-        run: pnpm test
 
   unit:
     runs-on: ubuntu-22.04
